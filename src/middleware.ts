@@ -8,10 +8,10 @@ const RAW_EXTENSIONS = [
 
 const isDev = process.env.NODE_ENV === "development";
 
-function buildCsp(): string {
+function buildCsp(nonce: string): string {
   const scriptSrc = isDev
     ? "'self' 'unsafe-inline' 'unsafe-eval'"
-    : "'self' 'unsafe-inline'";
+    : `'self' 'nonce-${nonce}' 'unsafe-inline'`;
 
   const directives = [
     "default-src 'self'",
@@ -66,8 +66,14 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  const response = NextResponse.next();
-  response.headers.set("Content-Security-Policy", buildCsp());
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const csp = buildCsp(nonce);
+
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set("x-nonce", nonce);
+
+  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  response.headers.set("Content-Security-Policy", csp);
   return applySecurityHeaders(response);
 }
 

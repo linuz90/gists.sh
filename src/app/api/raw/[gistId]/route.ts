@@ -34,6 +34,8 @@ export async function GET(
     return new NextResponse(targetFile.content, {
       headers: {
         "Content-Type": `${contentType}; charset=utf-8`,
+        "Content-Security-Policy": "default-src 'none'",
+        "X-Content-Type-Options": "nosniff",
         "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
       },
     });

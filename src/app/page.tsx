@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ArrowDown } from "lucide-react";
 
 export default function Home() {
@@ -15,7 +16,7 @@ export default function Home() {
 
         {/* How it works */}
         <div className="space-y-5">
-          <h2 className="text-xs font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+          <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
             How it works
           </h2>
           <div className="space-y-3">
@@ -43,15 +44,29 @@ export default function Home() {
 
         {/* Try it */}
         <div className="space-y-5">
-          <h2 className="text-xs font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+          <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
             Try it
           </h2>
-          <a
+          <Link
             href="/linuz90/93618e39c629a4d55c03df4d5391e4ca"
             className="block font-mono text-sm text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
           >
             gists.sh/linuz90/93618e39c629a4d55c03df4d5391e4ca →
-          </a>
+          </Link>
+        </div>
+
+        {/* Agent skill */}
+        <div className="space-y-5">
+          <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+            Agent skill
+          </h2>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+            Install the skill and every gist your AI agent creates
+            automatically gets a clean gists.sh link.
+          </p>
+          <div className="font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 text-neutral-700 dark:text-neutral-300">
+            npx skills add linuz90/gists.sh
+          </div>
         </div>
       </div>
     </main>

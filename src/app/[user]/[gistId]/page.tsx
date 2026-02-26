@@ -8,6 +8,7 @@ import { AuthorFooter } from "@/components/author-footer";
 import { PageCopyButtons } from "@/components/page-copy-buttons";
 import { CodeBlockEnhancer } from "@/components/code-block-enhancer";
 import { GitHubIcon } from "@/components/icons";
+import Link from "next/link";
 import type { Metadata } from "next";
 
 interface PageProps {
@@ -123,12 +124,12 @@ export default async function GistPage({ params, searchParams }: PageProps) {
               <GitHubIcon className="shrink-0" />
               View on GitHub
             </a>
-            <a
+            <Link
               href="/"
               className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
             >
               gists.sh
-            </a>
+            </Link>
           </div>
         </footer>
       </div>
