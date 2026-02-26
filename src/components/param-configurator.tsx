@@ -141,8 +141,8 @@ export function ParamConfigurator() {
           href={`/linuz90/c77fd6ba8ca775f9b64bb7ae085537a4${paramString}`}
           className="block font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 hover:bg-neutral-200/70 dark:hover:bg-neutral-800 transition-colors space-y-2 overflow-hidden"
         >
-          <div className="text-neutral-400 dark:text-neutral-600 break-all">
-            <span className="line-through decoration-neutral-300 dark:decoration-neutral-700">
+          <div className="text-neutral-500 dark:text-neutral-600 break-all">
+            <span className="line-through decoration-neutral-400 dark:decoration-neutral-700">
               gist.github.com
             </span>
             /linuz90/c77fd6ba8ca775f9b64bb7ae085537a4
@@ -157,7 +157,7 @@ export function ParamConfigurator() {
               <span className="text-neutral-900 dark:text-neutral-100 font-medium">
                 gists.sh
               </span>
-              <span className="text-neutral-400 dark:text-neutral-600">
+              <span className="text-neutral-500 dark:text-neutral-600">
                 /linuz90/c77fd6ba8ca775f9b64bb7ae085537a4
                 {paramString && (
                   <span className="text-blue-500">{paramString}</span>
@@ -166,10 +166,10 @@ export function ParamConfigurator() {
             </span>
           </div>
         </Link>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+        <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
           Append these URL params to any gist link to customize how it looks.
         </p>
-        <div className="font-mono text-xs bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 space-y-1 text-neutral-500 dark:text-neutral-400">
+        <div className="font-mono text-xs bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 space-y-1 text-neutral-600 dark:text-neutral-400">
           {PARAM_DOCS.map((d) => (
             <div key={d.param}>
               <span className="text-neutral-700 dark:text-neutral-300">
@@ -186,7 +186,7 @@ export function ParamConfigurator() {
         <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
           Agent skill
         </h2>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+        <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
           Install the skill and every gist your AI agent creates automatically
           gets a clean gists.sh link.
         </p>
@@ -200,7 +200,7 @@ export function ParamConfigurator() {
         <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
           Or just prompt it
         </h2>
-        <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+        <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
           No skill needed. Copy this into your agent&apos;s instructions
           (OpenClaw 🦞, Claude Code, Cursor, etc.) and it will use gists.sh
           automatically.

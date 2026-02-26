@@ -16,6 +16,7 @@ export interface GistOwner {
 export interface Gist {
   id: string;
   description: string | null;
+  public: boolean;
   files: Record<string, GistFile>;
   owner: GistOwner | null;
   created_at: string;

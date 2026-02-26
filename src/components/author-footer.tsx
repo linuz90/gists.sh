@@ -43,20 +43,20 @@ export function AuthorFooter({ user }: AuthorFooterProps) {
               href={user.html_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-mono text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+              className="text-sm font-mono text-neutral-500 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
             >
               @{user.login}
             </a>
           </div>
 
           {user.bio && (
-            <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-400 line-clamp-2">
+            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
               {user.bio}
             </p>
           )}
 
           {hasSocials && (
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-neutral-400 dark:text-neutral-500">
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-neutral-500 dark:text-neutral-500">
               {user.location && (
                 <span className="flex items-center gap-1">
                   <MapPin size={14} className="shrink-0" />

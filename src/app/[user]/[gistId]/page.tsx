@@ -28,7 +28,7 @@ export async function generateMetadata({
   const gist = await fetchGist(gistId);
 
   if (!gist) {
-    return { title: "Not Found - gists.sh" };
+    return { title: "Not Found · gists.sh" };
   }
 
   const files = Object.values(gist.files);
@@ -36,8 +36,11 @@ export async function generateMetadata({
   const title = gist.description || firstFile?.filename || "Gist";
 
   return {
-    title: `${title} - gists.sh`,
+    title: `${title} · gists.sh`,
     description: `${firstFile?.filename} by ${user}`,
+    ...(!gist.public && {
+      robots: { index: false, follow: false },
+    }),
     openGraph: {
       title,
       description: `${firstFile?.filename} by ${user}`,
@@ -83,7 +86,7 @@ export default async function GistPage({ params, searchParams }: PageProps) {
                 {activeFilename}
               </h1>
               {gist.description && (
-                <p className="mt-1 text-sm text-neutral-400 dark:text-neutral-500 truncate">
+                <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-500 truncate">
                   {gist.description}
                 </p>
               )}
@@ -128,7 +131,7 @@ export default async function GistPage({ params, searchParams }: PageProps) {
         {/* Footer */}
         {!hideFooter && (
           <footer className="mt-8 pt-8 border-t border-neutral-100 dark:border-neutral-900">
-            <div className="flex items-center justify-between text-xs font-mono text-neutral-400 dark:text-neutral-600">
+            <div className="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-600">
               <a
                 href={gist.html_url}
                 target="_blank"

@@ -14,7 +14,7 @@ export default function Home() {
             </svg>
             gists.sh
           </h1>
-          <p className="text-base text-neutral-500 dark:text-neutral-400 leading-relaxed">
+          <p className="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
             GitHub Gists are the fastest way to share code, notes, and snippets.
             But they look terrible. This fixes that.
           </p>
@@ -25,11 +25,11 @@ export default function Home() {
           <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
             How it works
           </h2>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
             Take any GitHub Gist URL and replace <code className="font-mono text-neutral-700 dark:text-neutral-300">gist.github.com</code> with <code className="font-mono text-neutral-700 dark:text-neutral-300">gists.sh</code>. That&apos;s it.
           </p>
           <div className="font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 flex items-center gap-3 flex-wrap">
-            <span className="text-neutral-400 dark:text-neutral-600 line-through decoration-neutral-300 dark:decoration-neutral-700">
+            <span className="text-neutral-400 dark:text-neutral-600 line-through decoration-neutral-400 dark:decoration-neutral-700">
               gist.github.com
             </span>
             <ArrowRight size={14} className="text-blue-500 shrink-0" strokeWidth={2.5} />
@@ -47,10 +47,10 @@ export default function Home() {
             Why this exists
           </h2>
           <div className="space-y-4">
-            <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
               I use gists every day to share documents, research, and snippets with teammates and friends. I also often have my AI agents create gists to share things with me.
             </p>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
               Gists are incredibly convenient, but not particularly nice to look at. I built this for those who, like me, would rather see a clean, minimal page, even if just for 10 seconds.
             </p>
             <div className="flex items-center gap-2.5 pt-1">
@@ -61,7 +61,7 @@ export default function Home() {
                 height={24}
                 className="rounded-full shrink-0"
               />
-              <p className="text-sm text-neutral-500 dark:text-neutral-400">
+              <p className="text-sm text-neutral-600 dark:text-neutral-400">
                 <a
                   href="https://fabrizio.so"
                   target="_blank"
@@ -70,7 +70,7 @@ export default function Home() {
                 >
                   Fabrizio Rinaldi
                 </a>
-                <span className="mx-1.5 text-neutral-300 dark:text-neutral-700">/</span>
+                <span className="mx-1.5 text-neutral-400 dark:text-neutral-700">/</span>
                 <a
                   href="https://x.com/linuz90"
                   target="_blank"
@@ -84,23 +84,28 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Open source */}
+        {/* Open source & privacy */}
         <div className="space-y-5">
           <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
             Open source
           </h2>
-          <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
-            gists.sh is open source. Star it, fork it, or contribute on{" "}
-            <a
-              href="https://github.com/linuz90/gists.sh"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors underline underline-offset-2 decoration-neutral-300 dark:decoration-neutral-700"
-            >
-              GitHub
-            </a>
-            .
-          </p>
+          <div className="space-y-4">
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+              gists.sh is fully open source. No tracking, no analytics, no data collection. Your gists are fetched directly from the GitHub API and never stored. Secret gists are marked as noindex so search engines won&apos;t crawl them.
+            </p>
+            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+              Don&apos;t take my word for it.{" "}
+              <a
+                href="https://github.com/linuz90/gists.sh"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors underline underline-offset-2 decoration-neutral-400 dark:decoration-neutral-700"
+              >
+                Read the source
+              </a>
+              .
+            </p>
+          </div>
         </div>
       </div>
     </main>

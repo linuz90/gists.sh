@@ -60,7 +60,7 @@
 
 .markdown-body ul { list-style-type: disc; }
 .markdown-body ol { list-style-type: decimal; }
-.markdown-body ::marker { color: #a3a3a3; }
+.markdown-body ::marker { color: #737373; }
 
 .markdown-body li {
   margin-top: 0.375em;
@@ -77,7 +77,7 @@
 .markdown-body a {
   color: #0a0a0a;
   text-decoration: underline;
-  text-decoration-color: #d4d4d4;
+  text-decoration-color: #a3a3a3;
   text-underline-offset: 4px;
   transition: text-decoration-color 0.15s;
 }
@@ -220,6 +220,7 @@
 
 .dark .markdown-body a {
   color: #fafafa;
+  text-decoration-color: #525252;
 }
 
 .dark .markdown-body a:hover {

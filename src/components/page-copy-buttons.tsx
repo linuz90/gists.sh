@@ -69,7 +69,7 @@ export function PageCopyButtons({ content }: PageCopyButtonsProps) {
   }, [handleCopyRaw, handleCopyFormatted, handleCopyLink]);
 
   const triggerClass =
-    "p-1.5 rounded-md text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors outline-none";
+    "p-1.5 rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors outline-none";
 
   const itemClass =
     "flex items-center gap-2.5 px-2.5 py-1.5 text-[0.8125rem] rounded-md outline-none cursor-default select-none text-neutral-200 dark:text-neutral-700 data-[highlighted]:bg-white/10 dark:data-[highlighted]:bg-black/10 data-[highlighted]:text-white dark:data-[highlighted]:text-neutral-900";

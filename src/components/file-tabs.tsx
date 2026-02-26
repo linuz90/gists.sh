@@ -44,7 +44,7 @@ export function FileTabs({
           className={`py-1.5 text-xs font-mono whitespace-nowrap transition-colors focus:outline-none -mb-px ${
             name === activeFile
               ? "text-neutral-900 dark:text-neutral-100 border-b-2 border-neutral-900 dark:border-neutral-100"
-              : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 border-b-2 border-transparent"
+              : "text-neutral-500 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 border-b-2 border-transparent"
           }`}
         >
           {name}
