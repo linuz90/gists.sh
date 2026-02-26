@@ -10,6 +10,11 @@ A minimal, beautifully designed frontend that wraps GitHub Gists. Instead of the
 - `gists.sh/{user}/{gist_id}.md` → raw content (proxied from GitHub)
 - `gists.sh/{user}/{gist_id}?file=somefile.py` → specific file in multi-file gist
 
+## Domains
+
+- **Primary:** gists.sh
+- **Secondary:** gists.app (redirect to gists.sh)
+
 ## Tech Stack
 
 - **Next.js 15** (App Router, TypeScript)
