@@ -2,7 +2,7 @@
 
 ## What is this project?
 
-gists.sh is a beautiful, minimal GitHub Gist viewer. It wraps gist.github.com with clean design, proper typography, and syntax highlighting. Read `PROJECT.md` for the full spec.
+A minimal, beautiful viewer for GitHub Gists. Replace `gist.github.com` with `gists.sh` in any URL to get clean typography, syntax highlighting, and a distraction-free reading experience.
 
 ## Tech Stack
 
@@ -32,7 +32,6 @@ Copy `.env.local.example` to `.env.local` and fill in:
 - `src/app/api/` — API routes (raw content proxy)
 - `src/components/` — shared UI components
 - `src/lib/` — utilities (GitHub API client, caching, etc.)
-- `PROJECT.md` — full product spec and design direction
 
 ## Design Principles
 
