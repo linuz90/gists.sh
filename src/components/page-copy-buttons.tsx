@@ -110,7 +110,7 @@ export function PageCopyButtons({ content, originalUrl }: PageCopyButtonsProps) 
             side="bottom"
             align="end"
             sideOffset={6}
-            className="z-50 min-w-[160px] rounded-lg bg-neutral-900 dark:bg-neutral-200 p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2"
+            className="z-50 min-w-[160px] rounded-xl bg-neutral-900 dark:bg-neutral-200 p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2"
           >
             <DropdownMenu.Item className={itemClass} onSelect={handleCopyRaw}>
               <Clipboard size={14} />

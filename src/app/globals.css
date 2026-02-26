@@ -47,6 +47,11 @@ summary {
   margin-top: 2em;
   margin-bottom: 0.75em;
   line-height: 1.3;
+  text-wrap: pretty;
+}
+
+.markdown-body :is(h1, h2, h3, h4)[id] {
+  scroll-margin-top: 2rem;
 }
 
 .markdown-body h1 { font-size: 1.75rem; }
@@ -86,13 +91,13 @@ summary {
 .markdown-body a {
   color: #0a0a0a;
   text-decoration: underline;
-  text-decoration-color: #a3a3a3;
+  text-decoration-color: #d4d4d4;
   text-underline-offset: 4px;
   transition: text-decoration-color 0.15s;
 }
 
 .markdown-body a:hover {
-  text-decoration-color: #525252;
+  text-decoration-color: #737373;
 }
 
 /* Inline code */
@@ -229,11 +234,11 @@ summary {
 
 .dark .markdown-body a {
   color: #fafafa;
-  text-decoration-color: #525252;
+  text-decoration-color: #404040;
 }
 
 .dark .markdown-body a:hover {
-  color: #a3a3a3;
+  text-decoration-color: #737373;
 }
 
 .dark .markdown-body :not(pre) > code {
