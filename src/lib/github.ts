@@ -23,6 +23,40 @@ export interface Gist {
   html_url: string;
 }
 
+export interface GitHubUser {
+  login: string;
+  avatar_url: string;
+  html_url: string;
+  name: string | null;
+  bio: string | null;
+  blog: string | null;
+  twitter_username: string | null;
+  location: string | null;
+}
+
+export async function fetchUser(username: string): Promise<GitHubUser | null> {
+  const headers: Record<string, string> = {
+    Accept: "application/vnd.github.v3+json",
+  };
+
+  if (process.env.GITHUB_TOKEN) {
+    headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
+  }
+
+  try {
+    const res = await fetch(`https://api.github.com/users/${username}`, {
+      headers,
+      next: { revalidate: 86400 },
+    });
+
+    if (!res.ok) return null;
+
+    return res.json();
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchGist(gistId: string): Promise<Gist | null> {
   const headers: Record<string, string> = {
     Accept: "application/vnd.github.v3+json",

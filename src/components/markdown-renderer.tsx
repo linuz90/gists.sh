@@ -1,32 +1,37 @@
-import ReactMarkdown from "react-markdown";
+import { unified } from "unified";
+import remarkParse from "remark-parse";
 import remarkGfm from "remark-gfm";
+import { remarkAlert } from "remark-github-blockquote-alert";
+import remarkRehype from "remark-rehype";
 import rehypeRaw from "rehype-raw";
 import rehypeShiki from "@shikijs/rehype";
+import rehypeStringify from "rehype-stringify";
 
 interface MarkdownRendererProps {
   content: string;
 }
 
-export function MarkdownRenderer({ content }: MarkdownRendererProps) {
+export async function MarkdownRenderer({ content }: MarkdownRendererProps) {
+  const result = await unified()
+    .use(remarkParse)
+    .use(remarkGfm)
+    .use(remarkAlert)
+    .use(remarkRehype, { allowDangerousHtml: true })
+    .use(rehypeRaw)
+    .use(rehypeShiki, {
+      themes: {
+        light: "github-light",
+        dark: "github-dark",
+      },
+      defaultLanguage: "tsx",
+    })
+    .use(rehypeStringify)
+    .process(content);
+
   return (
-    <div className="prose prose-neutral dark:prose-invert max-w-none prose-headings:font-semibold prose-headings:tracking-tight prose-p:leading-relaxed prose-a:underline prose-a:underline-offset-4 prose-code:before:content-none prose-code:after:content-none prose-code:bg-neutral-100 prose-code:dark:bg-neutral-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-code:font-mono prose-pre:p-0 prose-pre:bg-transparent prose-img:rounded-lg prose-blockquote:border-l-neutral-300 prose-blockquote:dark:border-l-neutral-700">
-      <ReactMarkdown
-        remarkPlugins={[remarkGfm]}
-        rehypePlugins={[
-          rehypeRaw,
-          [
-            rehypeShiki,
-            {
-              themes: {
-                light: "github-light",
-                dark: "github-dark",
-              },
-            },
-          ],
-        ]}
-      >
-        {content}
-      </ReactMarkdown>
-    </div>
+    <div
+      className="markdown-body max-w-none"
+      dangerouslySetInnerHTML={{ __html: String(result) }}
+    />
   );
 }

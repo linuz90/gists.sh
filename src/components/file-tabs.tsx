@@ -36,15 +36,15 @@ export function FileTabs({
   if (filenames.length <= 1) return null;
 
   return (
-    <div className="flex gap-1 overflow-x-auto border-b border-neutral-200 dark:border-neutral-800 pb-px">
+    <div className="flex gap-6 overflow-x-auto border-b border-neutral-200 dark:border-neutral-800">
       {filenames.map((name) => (
         <button
           key={name}
           onClick={() => handleTabClick(name)}
-          className={`px-3 py-2 text-sm font-mono whitespace-nowrap transition-colors rounded-t-md ${
+          className={`py-1.5 text-xs font-mono whitespace-nowrap transition-colors focus:outline-none -mb-px ${
             name === activeFile
               ? "text-neutral-900 dark:text-neutral-100 border-b-2 border-neutral-900 dark:border-neutral-100"
-              : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300"
+              : "text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 border-b-2 border-transparent"
           }`}
         >
           {name}

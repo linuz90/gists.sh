@@ -10,13 +10,19 @@
   },
   "dependencies": {
     "@shikijs/rehype": "^3.23.0",
+    "geist": "^1.7.0",
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-markdown": "^10.1.0",
     "rehype-raw": "^7.0.0",
+    "rehype-stringify": "^10.0.1",
     "remark-gfm": "^4.0.1",
-    "shiki": "^3.23.0"
+    "remark-github-blockquote-alert": "^2.0.1",
+    "remark-parse": "^11.0.0",
+    "remark-rehype": "^11.1.2",
+    "shiki": "^3.23.0",
+    "unified": "^11.0.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
