@@ -14,6 +14,8 @@ function ThemeParamSync() {
     const theme = searchParams.get("theme");
     if (theme === "dark" || theme === "light") {
       setTheme(theme);
+    } else {
+      setTheme("system");
     }
   }, [searchParams, setTheme]);
 

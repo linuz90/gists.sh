@@ -7,6 +7,7 @@ import { FileTabs } from "@/components/file-tabs";
 import { AuthorFooter } from "@/components/author-footer";
 import { PageCopyButtons } from "@/components/page-copy-buttons";
 import { CodeBlockEnhancer } from "@/components/code-block-enhancer";
+import { HashScroller } from "@/components/hash-scroller";
 import Link from "next/link";
 import type { Metadata } from "next";
 
@@ -77,6 +78,7 @@ export default async function GistPage({ params, searchParams }: PageProps) {
 
   return (
     <main className="min-h-screen">
+      <HashScroller />
       <div className={`max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12${monoMode ? " font-mono" : ""}`}>
         {/* Header */}
         {!hideHeader && (
