@@ -5,8 +5,9 @@ import { Providers } from "@/components/providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://gists.sh"),
   title: "gists.sh",
-  description: "Beautiful GitHub Gist viewer",
+  description: "Gists, but beautiful",
 };
 
 export default function RootLayout({
