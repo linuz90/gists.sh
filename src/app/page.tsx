@@ -83,6 +83,25 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Open source */}
+        <div className="space-y-5">
+          <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+            Open source
+          </h2>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400 leading-relaxed">
+            gists.sh is open source. Star it, fork it, or contribute on{" "}
+            <a
+              href="https://github.com/linuz90/gists.sh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors underline underline-offset-2 decoration-neutral-300 dark:decoration-neutral-700"
+            >
+              GitHub
+            </a>
+            .
+          </p>
+        </div>
       </div>
     </main>
   );
