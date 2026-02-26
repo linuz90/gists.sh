@@ -2,14 +2,15 @@
 
 import { useEffect, useCallback } from "react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Clipboard, ClipboardPaste, Check, Link } from "lucide-react";
+import { Clipboard, ClipboardPaste, Check, Link, ExternalLink } from "lucide-react";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 
 interface PageCopyButtonsProps {
   content: string;
+  originalUrl: string;
 }
 
-export function PageCopyButtons({ content }: PageCopyButtonsProps) {
+export function PageCopyButtons({ content, originalUrl }: PageCopyButtonsProps) {
   const { copied, copy, copyFormatted } = useCopyToClipboard();
 
   const handleCopyRaw = useCallback(() => {
@@ -41,6 +42,14 @@ export function PageCopyButtons({ content }: PageCopyButtonsProps) {
     copy(window.location.href, "Link copied");
   }, [copy]);
 
+  const handleCopyOriginalUrl = useCallback(() => {
+    copy(originalUrl, "Original URL copied");
+  }, [copy, originalUrl]);
+
+  const handleOpenOriginal = useCallback(() => {
+    window.open(originalUrl, "_blank", "noopener,noreferrer");
+  }, [originalUrl]);
+
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       // Skip if any modifier key is held
@@ -61,12 +70,18 @@ export function PageCopyButtons({ content }: PageCopyButtonsProps) {
         case "l":
           handleCopyLink();
           break;
+        case "g":
+          handleCopyOriginalUrl();
+          break;
+        case "o":
+          handleOpenOriginal();
+          break;
       }
     }
 
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [handleCopyRaw, handleCopyFormatted, handleCopyLink]);
+  }, [handleCopyRaw, handleCopyFormatted, handleCopyLink, handleCopyOriginalUrl, handleOpenOriginal]);
 
   const triggerClass =
     "p-1.5 rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors outline-none";
@@ -111,6 +126,17 @@ export function PageCopyButtons({ content }: PageCopyButtonsProps) {
               <Link size={14} />
               <span className="flex-1">Copy link</span>
               <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">L</span>
+            </DropdownMenu.Item>
+            <DropdownMenu.Item className={itemClass} onSelect={handleCopyOriginalUrl}>
+              <Link size={14} />
+              <span className="flex-1">Copy original URL</span>
+              <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">G</span>
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator className="h-px my-1 mx-1.5 bg-white/10 dark:bg-black/10" />
+            <DropdownMenu.Item className={itemClass} onSelect={handleOpenOriginal}>
+              <ExternalLink size={14} />
+              <span className="flex-1">Open on GitHub</span>
+              <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">O</span>
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>
