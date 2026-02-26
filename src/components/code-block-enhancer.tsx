@@ -34,7 +34,6 @@ export function CodeBlockEnhancer({ children }: CodeBlockEnhancerProps) {
       const btn = document.createElement("button");
       btn.className = "code-copy-btn";
       btn.setAttribute("aria-label", "Copy code");
-      btn.setAttribute("data-tooltip", "Copy code");
       btn.innerHTML = CLIPBOARD_SVG;
 
       let timeout: ReturnType<typeof setTimeout>;
@@ -45,12 +44,10 @@ export function CodeBlockEnhancer({ children }: CodeBlockEnhancerProps) {
 
         btn.innerHTML = CHECK_SVG;
         btn.classList.add("code-copy-btn--copied");
-        btn.setAttribute("data-tooltip", "Copied!");
         clearTimeout(timeout);
         timeout = setTimeout(() => {
           btn.innerHTML = CLIPBOARD_SVG;
           btn.classList.remove("code-copy-btn--copied");
-          btn.setAttribute("data-tooltip", "Copy code");
         }, 2000);
       });
 

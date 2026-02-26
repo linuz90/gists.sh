@@ -20,7 +20,7 @@ export function CopyButton({
 
   return (
     <button
-      onClick={() => copy(text)}
+      onClick={() => copy(text, "Copied to clipboard")}
       className={className}
       aria-label={copied ? "Copied" : label}
       title={copied ? "Copied" : label}

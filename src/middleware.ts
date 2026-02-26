@@ -17,7 +17,7 @@ function buildCsp(nonce: string): string {
     "default-src 'self'",
     `script-src ${scriptSrc}`,
     "style-src 'self' 'unsafe-inline'",
-    "img-src 'self' data: https://avatars.githubusercontent.com",
+    "img-src 'self' data: https://avatars.githubusercontent.com https://www.fabrizio.so",
     "font-src 'self'",
     "connect-src 'self'",
     "object-src 'none'",

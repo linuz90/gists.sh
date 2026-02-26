@@ -36,7 +36,7 @@ export function FileTabs({
   if (filenames.length <= 1) return null;
 
   return (
-    <div className="flex gap-6 overflow-x-auto border-b border-neutral-200 dark:border-neutral-800">
+    <div className="flex gap-6 overflow-x-auto overflow-y-hidden hide-scrollbar border-b border-neutral-200 dark:border-neutral-800">
       {filenames.map((name) => (
         <button
           key={name}

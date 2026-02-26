@@ -1,5 +1,8 @@
 @import "tailwindcss";
+@import "tw-animate-css";
 @import "remark-github-blockquote-alert/alert.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 *:focus:not(:focus-visible) {
   outline: none;
@@ -14,9 +17,10 @@
 /* ── Markdown prose ─────────────────────────────────────────────── */
 
 .markdown-body {
+  --md-prose-size: 0.9375rem;
   color: #1a1a1a;
   line-height: 1.75;
-  font-size: 0.9375rem;
+  font-size: var(--md-prose-size);
 }
 
 .markdown-body > *:first-child {
@@ -56,6 +60,7 @@
 
 .markdown-body ul { list-style-type: disc; }
 .markdown-body ol { list-style-type: decimal; }
+.markdown-body ::marker { color: #a3a3a3; }
 
 .markdown-body li {
   margin-top: 0.375em;
@@ -72,11 +77,13 @@
 .markdown-body a {
   color: #0a0a0a;
   text-decoration: underline;
+  text-decoration-color: #d4d4d4;
   text-underline-offset: 4px;
+  transition: text-decoration-color 0.15s;
 }
 
 .markdown-body a:hover {
-  color: #525252;
+  text-decoration-color: #525252;
 }
 
 /* Inline code */
@@ -107,7 +114,7 @@
   color: #525252;
   margin-top: 1.5em;
   margin-bottom: 1.5em;
-  font-style: italic;
+  font-style: normal;
 }
 
 /* GitHub-style alerts as cards */
@@ -119,7 +126,7 @@
   border: 1px solid;
   border-radius: 0.5rem;
   padding: 0.875rem 1rem;
-  font-size: 0.875rem;
+  font-size: var(--md-prose-size);
 }
 
 .markdown-body .markdown-alert p {
@@ -169,7 +176,7 @@
   width: 100%;
   margin-top: 1.5em;
   margin-bottom: 1.5em;
-  font-size: 0.875rem;
+  font-size: calc(var(--md-prose-size) - 0.0625rem);
 }
 
 .markdown-body th,
@@ -179,10 +186,20 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
+.markdown-body th:first-child,
+.markdown-body td:first-child {
+  padding-left: 0;
+}
+
+.markdown-body th:last-child,
+.markdown-body td:last-child {
+  padding-right: 0;
+}
+
 .markdown-body th {
   font-weight: 600;
   color: #0a0a0a;
-  border-bottom-width: 2px;
+  border-bottom-color: #d4d4d4;
 }
 
 /* Strong & emphasis */
@@ -190,74 +207,73 @@
 
 /* ── Dark mode ──────────────────────────────────────────────────── */
 
-@media (prefers-color-scheme: dark) {
-  .markdown-body {
-    color: #d4d4d4;
-  }
+.dark .markdown-body {
+  color: #d4d4d4;
+}
 
-  .markdown-body h1,
-  .markdown-body h2,
-  .markdown-body h3,
-  .markdown-body h4 {
-    color: #fafafa;
-  }
+.dark .markdown-body h1,
+.dark .markdown-body h2,
+.dark .markdown-body h3,
+.dark .markdown-body h4 {
+  color: #fafafa;
+}
 
-  .markdown-body a {
-    color: #fafafa;
-  }
+.dark .markdown-body a {
+  color: #fafafa;
+}
 
-  .markdown-body a:hover {
-    color: #a3a3a3;
-  }
+.dark .markdown-body a:hover {
+  color: #a3a3a3;
+}
 
-  .markdown-body :not(pre) > code {
-    background: #262626;
-  }
+.dark .markdown-body :not(pre) > code {
+  background: #262626;
+}
 
-  .markdown-body pre:not(.shiki) {
-    background: #171717;
-  }
+.dark .markdown-body pre:not(.shiki) {
+  background: #171717;
+}
 
-  .markdown-body blockquote:not(.markdown-alert) {
-    border-left-color: #404040;
-    color: #a3a3a3;
-  }
+.dark .markdown-body ::marker { color: #525252; }
 
-  .markdown-body .markdown-alert-note {
-    background: rgba(56, 139, 253, 0.08);
-    border-color: rgba(56, 139, 253, 0.2);
-  }
-  .markdown-body .markdown-alert-tip {
-    background: rgba(63, 185, 80, 0.08);
-    border-color: rgba(63, 185, 80, 0.2);
-  }
-  .markdown-body .markdown-alert-important {
-    background: rgba(163, 113, 247, 0.08);
-    border-color: rgba(163, 113, 247, 0.2);
-  }
-  .markdown-body .markdown-alert-warning {
-    background: rgba(210, 153, 34, 0.08);
-    border-color: rgba(210, 153, 34, 0.2);
-  }
-  .markdown-body .markdown-alert-caution {
-    background: rgba(248, 81, 73, 0.08);
-    border-color: rgba(248, 81, 73, 0.2);
-  }
+.dark .markdown-body blockquote:not(.markdown-alert) {
+  border-left-color: #404040;
+  color: #a3a3a3;
+}
 
-  .markdown-body hr {
-    border-top-color: rgba(255, 255, 255, 0.08);
-  }
+.dark .markdown-body .markdown-alert-note {
+  background: rgba(56, 139, 253, 0.08);
+  border-color: rgba(56, 139, 253, 0.2);
+}
+.dark .markdown-body .markdown-alert-tip {
+  background: rgba(63, 185, 80, 0.08);
+  border-color: rgba(63, 185, 80, 0.2);
+}
+.dark .markdown-body .markdown-alert-important {
+  background: rgba(163, 113, 247, 0.08);
+  border-color: rgba(163, 113, 247, 0.2);
+}
+.dark .markdown-body .markdown-alert-warning {
+  background: rgba(210, 153, 34, 0.08);
+  border-color: rgba(210, 153, 34, 0.2);
+}
+.dark .markdown-body .markdown-alert-caution {
+  background: rgba(248, 81, 73, 0.08);
+  border-color: rgba(248, 81, 73, 0.2);
+}
 
-  .markdown-body th,
-  .markdown-body td {
-    border-bottom-color: rgba(255, 255, 255, 0.08);
-  }
+.dark .markdown-body hr {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
 
-  .markdown-body th {
-    color: #fafafa;
-    border-bottom-width: 1px;
-    border-bottom-color: rgba(255, 255, 255, 0.14);
-  }
+.dark .markdown-body th,
+.dark .markdown-body td {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .markdown-body th {
+  color: #fafafa;
+  border-bottom-color: rgba(255, 255, 255, 0.2);
 }
 
 /* ── Shiki code blocks ──────────────────────────────────────────── */
@@ -273,18 +289,16 @@ pre.shiki {
   margin-bottom: 1.5em;
 }
 
-@media (prefers-color-scheme: dark) {
-  pre.shiki {
-    background-color: #171717 !important;
-  }
+.dark pre.shiki {
+  background-color: #171717 !important;
+}
 
-  .shiki {
-    background-color: var(--shiki-dark-bg) !important;
-  }
+.dark .shiki {
+  background-color: var(--shiki-dark-bg) !important;
+}
 
-  .shiki span {
-    color: var(--shiki-dark) !important;
-  }
+.dark .shiki span {
+  color: var(--shiki-dark) !important;
 }
 
 pre code {
@@ -349,15 +363,13 @@ pre code {
   transform: translateX(-50%) translateY(0);
 }
 
-@media (prefers-color-scheme: dark) {
-  [data-tooltip]::before {
-    background: #e5e5e5;
-    color: #171717;
-  }
+.dark [data-tooltip]::before {
+  background: #e5e5e5;
+  color: #171717;
+}
 
-  [data-tooltip]::after {
-    border-top-color: #e5e5e5;
-  }
+.dark [data-tooltip]::after {
+  border-top-color: #e5e5e5;
 }
 
 /* ── Code block copy buttons ──────────────────────────────────── */
@@ -370,22 +382,20 @@ pre code {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
-  padding: 0.375rem;
-  border-radius: 0.375rem;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  backdrop-filter: blur(4px);
-  color: #737373;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  background: transparent;
+  border: none;
+  color: #a3a3a3;
   cursor: pointer;
   opacity: 0;
-  transition: opacity 0.15s ease, color 0.15s ease, background 0.15s ease;
+  transition: opacity 0.15s ease, color 0.15s ease;
   line-height: 0;
   z-index: 10;
 }
 
 .code-copy-btn:hover {
-  color: #404040;
-  background: rgba(255, 255, 255, 0.95);
+  color: #525252;
 }
 
 .code-copy-btn--copied {
@@ -401,23 +411,90 @@ pre code {
   opacity: 1;
 }
 
-@media (prefers-color-scheme: dark) {
-  .code-copy-btn {
-    background: rgba(38, 38, 38, 0.8);
-    border-color: rgba(255, 255, 255, 0.08);
-    color: #a3a3a3;
-  }
+.dark .code-copy-btn {
+  color: #737373;
+}
 
-  .code-copy-btn:hover {
-    color: #d4d4d4;
-    background: rgba(38, 38, 38, 0.95);
-  }
+.dark .code-copy-btn:hover {
+  color: #a3a3a3;
+}
 
-  .code-copy-btn--copied {
-    color: #4ade80;
-  }
+.dark .code-copy-btn--copied {
+  color: #4ade80;
+}
 
-  .code-copy-btn--copied:hover {
-    color: #4ade80;
-  }
+.dark .code-copy-btn--copied:hover {
+  color: #4ade80;
+}
+
+/* ── Task list checkboxes ─────────────────────────────────────── */
+
+.markdown-body input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 1em;
+  height: 1em;
+  border: 1.5px solid #d4d4d4;
+  border-radius: 0.2em;
+  vertical-align: -0.125em;
+  margin: 0 0.35em 0 0;
+  cursor: default;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.markdown-body input[type="checkbox"]:checked {
+  background: #0a0a0a;
+  border-color: #0a0a0a;
+}
+
+.markdown-body input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute;
+  left: 0.2em;
+  top: 0.05em;
+  width: 0.35em;
+  height: 0.6em;
+  border: solid #fff;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+
+.dark .markdown-body input[type="checkbox"] {
+  border-color: #525252;
+}
+
+.dark .markdown-body input[type="checkbox"]:checked {
+  background: #fafafa;
+  border-color: #fafafa;
+}
+
+.dark .markdown-body input[type="checkbox"]:checked::after {
+  border-color: #171717;
+}
+
+/* Remove bullet from task list items */
+.markdown-body li:has(> input[type="checkbox"]) {
+  list-style: none;
+  margin-left: -1.5em;
+}
+
+/* ── Hide scrollbar utility ───────────────────────────────────── */
+
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Mono mode ────────────────────────────────────────────────── */
+
+.font-mono .markdown-body {
+  --md-prose-size: 0.875rem;
+}
+
+.font-mono .markdown-body,
+.font-mono .markdown-body * {
+  font-family: var(--font-mono) !important;
 }

@@ -7,13 +7,18 @@ import { FileTabs } from "@/components/file-tabs";
 import { AuthorFooter } from "@/components/author-footer";
 import { PageCopyButtons } from "@/components/page-copy-buttons";
 import { CodeBlockEnhancer } from "@/components/code-block-enhancer";
-import { GitHubIcon } from "@/components/icons";
 import Link from "next/link";
 import type { Metadata } from "next";
 
 interface PageProps {
   params: Promise<{ user: string; gistId: string }>;
-  searchParams: Promise<{ file?: string }>;
+  searchParams: Promise<{
+    file?: string;
+    theme?: string;
+    noheader?: string;
+    nofooter?: string;
+    mono?: string;
+  }>;
 }
 
 export async function generateMetadata({
@@ -43,7 +48,11 @@ export async function generateMetadata({
 
 export default async function GistPage({ params, searchParams }: PageProps) {
   const { user, gistId } = await params;
-  const { file: fileParam } = await searchParams;
+  const resolvedSearchParams = await searchParams;
+  const { file: fileParam } = resolvedSearchParams;
+  const hideHeader = resolvedSearchParams.noheader !== undefined;
+  const hideFooter = resolvedSearchParams.nofooter !== undefined;
+  const monoMode = resolvedSearchParams.mono !== undefined;
   const [gist, githubUser] = await Promise.all([
     fetchGist(gistId),
     fetchUser(user),
@@ -65,36 +74,40 @@ export default async function GistPage({ params, searchParams }: PageProps) {
 
   return (
     <main className="min-h-screen">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className={`max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12${monoMode ? " font-mono" : ""}`}>
         {/* Header */}
-        <header className="flex items-start justify-between mb-8">
-          <div className="min-w-0">
-            <h1 className="text-sm font-mono font-medium text-neutral-700 dark:text-neutral-300 truncate">
-              {activeFilename}
-            </h1>
-            {gist.description && (
-              <p className="mt-1 text-sm text-neutral-400 dark:text-neutral-500 truncate">
-                {gist.description}
-              </p>
-            )}
-          </div>
+        {!hideHeader && (
+          <header className="flex items-start justify-between mb-8">
+            <div className="min-w-0">
+              <h1 className="text-sm font-mono font-medium text-neutral-700 dark:text-neutral-300 truncate">
+                {activeFilename}
+              </h1>
+              {gist.description && (
+                <p className="mt-1 text-sm text-neutral-400 dark:text-neutral-500 truncate">
+                  {gist.description}
+                </p>
+              )}
+            </div>
 
-          <PageCopyButtons content={activeFile.content} />
-        </header>
+            <PageCopyButtons content={activeFile.content} />
+          </header>
+        )}
 
         {/* File tabs */}
-        <Suspense>
-          <FileTabs
-            filenames={filenames}
-            activeFile={activeFilename}
-            user={user}
-            gistId={gistId}
-          />
-        </Suspense>
+        {!hideHeader && (
+          <Suspense>
+            <FileTabs
+              filenames={filenames}
+              activeFile={activeFilename}
+              user={user}
+              gistId={gistId}
+            />
+          </Suspense>
+        )}
 
         {/* Content */}
         <CodeBlockEnhancer>
-          <div className={filenames.length > 1 ? "mt-8" : ""}>
+          <div id="gist-content" className={!hideHeader && filenames.length > 1 ? "mt-8" : ""}>
             {isMarkdown(activeFilename) ? (
               <Suspense>
                 <MarkdownRenderer content={activeFile.content} />
@@ -110,28 +123,29 @@ export default async function GistPage({ params, searchParams }: PageProps) {
         </CodeBlockEnhancer>
 
         {/* Author */}
-        {gist.owner && <AuthorFooter user={githubUser} />}
+        {!hideFooter && gist.owner && <AuthorFooter user={githubUser} />}
 
         {/* Footer */}
-        <footer className="mt-8 pt-8 border-t border-neutral-100 dark:border-neutral-900">
-          <div className="flex items-center justify-between text-xs font-mono text-neutral-400 dark:text-neutral-600">
-            <a
-              href={gist.html_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
-            >
-              <GitHubIcon className="shrink-0" />
-              View on GitHub
-            </a>
-            <Link
-              href="/"
-              className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
-            >
-              gists.sh
-            </Link>
-          </div>
-        </footer>
+        {!hideFooter && (
+          <footer className="mt-8 pt-8 border-t border-neutral-100 dark:border-neutral-900">
+            <div className="flex items-center justify-between text-xs font-mono text-neutral-400 dark:text-neutral-600">
+              <a
+                href={gist.html_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+              >
+                View on GitHub
+              </a>
+              <Link
+                href="/"
+                className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+              >
+                gists.sh
+              </Link>
+            </div>
+          </footer>
+        )}
       </div>
     </main>
   );
