@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect } from "react";
+import { copyToClipboard } from "@/lib/clipboard";
 
 const CLIPBOARD_SVG = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>`;
 
@@ -40,18 +41,7 @@ export function CodeBlockEnhancer({ children }: CodeBlockEnhancerProps) {
 
       btn.addEventListener("click", async () => {
         const text = pre.textContent || "";
-        try {
-          await navigator.clipboard.writeText(text);
-        } catch {
-          const textarea = document.createElement("textarea");
-          textarea.value = text;
-          textarea.style.position = "fixed";
-          textarea.style.opacity = "0";
-          document.body.appendChild(textarea);
-          textarea.select();
-          document.execCommand("copy");
-          document.body.removeChild(textarea);
-        }
+        await copyToClipboard(text);
 
         btn.innerHTML = CHECK_SVG;
         btn.classList.add("code-copy-btn--copied");

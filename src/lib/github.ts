@@ -35,6 +35,8 @@ export interface GitHubUser {
 }
 
 export async function fetchUser(username: string): Promise<GitHubUser | null> {
+  if (!isValidUsername(username)) return null;
+
   const headers: Record<string, string> = {
     Accept: "application/vnd.github.v3+json",
   };
@@ -57,7 +59,21 @@ export async function fetchUser(username: string): Promise<GitHubUser | null> {
   }
 }
 
+const GIST_ID_RE = /^[a-f0-9]+$/;
+const USERNAME_RE = /^[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/;
+
+export function isValidGistId(id: string): boolean {
+  if (!GIST_ID_RE.test(id)) return false;
+  return id.length === 20 || id.length === 32;
+}
+
+export function isValidUsername(username: string): boolean {
+  return username.length >= 1 && username.length <= 39 && USERNAME_RE.test(username);
+}
+
 export async function fetchGist(gistId: string): Promise<Gist | null> {
+  if (!isValidGistId(gistId)) return null;
+
   const headers: Record<string, string> = {
     Accept: "application/vnd.github.v3+json",
   };

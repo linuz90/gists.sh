@@ -1,57 +1,7 @@
+import Image from "next/image";
+import { Globe, MapPin } from "lucide-react";
+import { XIcon } from "@/components/icons";
 import type { GitHubUser } from "@/lib/github";
-
-function LocationIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="shrink-0"
-    >
-      <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-      <circle cx="12" cy="10" r="3" />
-    </svg>
-  );
-}
-
-function LinkIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="shrink-0"
-    >
-      <circle cx="12" cy="12" r="10" />
-      <path d="M2 12h20" />
-      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-    </svg>
-  );
-}
-
-function XIcon() {
-  return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="shrink-0"
-    >
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-    </svg>
-  );
-}
 
 function cleanBlogUrl(blog: string): string {
   return blog.replace(/^https?:\/\//, "").replace(/\/$/, "");
@@ -76,7 +26,7 @@ export function AuthorFooter({ user }: AuthorFooterProps) {
   return (
     <div className="mt-12 pt-8 border-t border-neutral-100 dark:border-neutral-900">
       <div className="flex items-start gap-4">
-        <img
+        <Image
           src={user.avatar_url}
           alt={user.login}
           width={40}
@@ -109,7 +59,7 @@ export function AuthorFooter({ user }: AuthorFooterProps) {
             <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-neutral-400 dark:text-neutral-500">
               {user.location && (
                 <span className="flex items-center gap-1">
-                  <LocationIcon />
+                  <MapPin size={14} className="shrink-0" />
                   {user.location}
                 </span>
               )}
@@ -120,7 +70,7 @@ export function AuthorFooter({ user }: AuthorFooterProps) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
                 >
-                  <LinkIcon />
+                  <Globe size={14} className="shrink-0" />
                   {cleanBlogUrl(user.blog!)}
                 </a>
               )}
@@ -131,7 +81,7 @@ export function AuthorFooter({ user }: AuthorFooterProps) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
                 >
-                  <XIcon />
+                  <XIcon className="shrink-0" />
                   @{user.twitter_username}
                 </a>
               )}

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "remark-github-blockquote-alert/alert.css";
 
-*:focus {
+*:focus:not(:focus-visible) {
   outline: none;
 }
 
@@ -293,43 +293,17 @@ pre code {
 
 /* ── Tooltips ──────────────────────────────────────────────────── */
 
-.tooltip-wrapper {
-  position: relative;
-  display: inline-flex;
+/* Radix tooltip fade animations */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-.tooltip-wrapper .tooltip {
-  position: absolute;
-  bottom: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%) translateY(4px);
-  padding: 4px 8px;
-  border-radius: 6px;
-  background: #171717;
-  color: #fafafa;
-  font-size: 0.6875rem;
-  line-height: 1.4;
-  white-space: nowrap;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.15s ease, transform 0.15s ease;
-  z-index: 50;
+@keyframes fade-out {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(2px); }
 }
-
-.tooltip-wrapper .tooltip::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  border: 4px solid transparent;
-  border-top-color: #171717;
-}
-
-.tooltip-wrapper:hover .tooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
+.animate-fade-in { animation: fade-in 0.15s ease; }
+.animate-fade-out { animation: fade-out 0.15s ease; }
 
 /* data-tooltip variant for vanilla DOM elements */
 [data-tooltip] {
@@ -376,15 +350,6 @@ pre code {
 }
 
 @media (prefers-color-scheme: dark) {
-  .tooltip-wrapper .tooltip {
-    background: #e5e5e5;
-    color: #171717;
-  }
-
-  .tooltip-wrapper .tooltip::after {
-    border-top-color: #e5e5e5;
-  }
-
   [data-tooltip]::before {
     background: #e5e5e5;
     color: #171717;

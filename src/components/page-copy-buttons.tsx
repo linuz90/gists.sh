@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
-import { ClipboardIcon, CheckIcon, LinkIcon } from "./copy-button";
+import { Clipboard, Check, Link } from "lucide-react";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { Tooltip } from "./tooltip";
 
 interface PageCopyButtonsProps {
@@ -9,39 +9,8 @@ interface PageCopyButtonsProps {
 }
 
 export function PageCopyButtons({ content }: PageCopyButtonsProps) {
-  const [copiedRaw, setCopiedRaw] = useState(false);
-  const [copiedLink, setCopiedLink] = useState(false);
-  const rawTimeout = useRef<ReturnType<typeof setTimeout>>(null);
-  const linkTimeout = useRef<ReturnType<typeof setTimeout>>(null);
-
-  const copyText = useCallback(async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      const textarea = document.createElement("textarea");
-      textarea.value = text;
-      textarea.style.position = "fixed";
-      textarea.style.opacity = "0";
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
-    }
-  }, []);
-
-  const handleCopyRaw = useCallback(async () => {
-    await copyText(content);
-    setCopiedRaw(true);
-    if (rawTimeout.current) clearTimeout(rawTimeout.current);
-    rawTimeout.current = setTimeout(() => setCopiedRaw(false), 2000);
-  }, [content, copyText]);
-
-  const handleCopyLink = useCallback(async () => {
-    await copyText(window.location.href);
-    setCopiedLink(true);
-    if (linkTimeout.current) clearTimeout(linkTimeout.current);
-    linkTimeout.current = setTimeout(() => setCopiedLink(false), 2000);
-  }, [copyText]);
+  const { copied: copiedRaw, copy: copyRaw } = useCopyToClipboard();
+  const { copied: copiedLink, copy: copyLink } = useCopyToClipboard();
 
   const btnClass =
     "p-1.5 rounded-md text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors";
@@ -50,20 +19,20 @@ export function PageCopyButtons({ content }: PageCopyButtonsProps) {
     <div className="flex items-center gap-1 ml-3 shrink-0">
       <Tooltip label={copiedRaw ? "Copied!" : "Copy raw"}>
         <button
-          onClick={handleCopyRaw}
+          onClick={() => copyRaw(content)}
           className={btnClass}
           aria-label={copiedRaw ? "Copied" : "Copy raw content"}
         >
-          {copiedRaw ? <CheckIcon /> : <ClipboardIcon />}
+          {copiedRaw ? <Check size={16} className="text-green-600 dark:text-green-400" /> : <Clipboard size={16} />}
         </button>
       </Tooltip>
       <Tooltip label={copiedLink ? "Copied!" : "Copy link"}>
         <button
-          onClick={handleCopyLink}
+          onClick={() => copyLink(window.location.href)}
           className={btnClass}
           aria-label={copiedLink ? "Copied" : "Copy link"}
         >
-          {copiedLink ? <CheckIcon /> : <LinkIcon />}
+          {copiedLink ? <Check size={16} className="text-green-600 dark:text-green-400" /> : <Link size={16} />}
         </button>
       </Tooltip>
     </div>
