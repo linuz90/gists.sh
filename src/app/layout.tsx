@@ -17,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <head>
+        <link rel="llms-txt" href="/llms.txt" />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var p=new URLSearchParams(window.location.search);var t=p.get('theme');var m=window.matchMedia('(prefers-color-scheme:dark)');if(t==='dark'||(t!=='light'&&m.matches)){document.documentElement.classList.add('dark')}if(!t){m.addEventListener('change',function(e){document.documentElement.classList.toggle('dark',e.matches)})}}catch(e){}})()`,
