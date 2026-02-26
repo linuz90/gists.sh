@@ -1,6 +1,8 @@
 import { ArrowRight } from "lucide-react";
 import { ParamConfigurator } from "@/components/param-configurator";
 
+export const dynamic = "force-dynamic";
+
 export default function Home() {
   return (
     <main className="min-h-screen flex items-start sm:items-center justify-center px-5 sm:px-6 lg:px-8 py-12 sm:py-24">
