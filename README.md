@@ -1,33 +1,60 @@
 # gists.sh
 
-A beautiful, minimal gist viewer. Makes GitHub Gists look good.
+A minimal, beautiful viewer for GitHub Gists. Replace `gist.github.com` with `gists.sh` in any gist URL. That's it.
 
-## How it works
+**[gists.sh](https://gists.sh)**
 
-- `gists.sh/{user}/{gist_id}` → beautifully rendered gist
-- `gists.sh/{user}/{gist_id}.md` → raw content
+## Usage
 
-## Stack
-
-- Next.js 15 (App Router)
-- react-markdown + remark-gfm + rehype for markdown rendering
-- Shiki for syntax highlighting
-- Deployed on Vercel
-
-## Development
-
-```bash
-pnpm install
-pnpm dev        # starts dev server on :3000
-pnpm build      # production build
+```
+gist.github.com/user/abc123  →  gists.sh/user/abc123
 ```
 
-## Agent Skill
+Markdown gets proper typography. Code gets syntax highlighting via Shiki. Multi-file gists get tabs. Everything looks clean.
 
-gists.sh ships with an [agent skill](https://skills.sh) that teaches your coding agent to present `gists.sh` URLs whenever you create or share GitHub Gists. Works with Claude Code, Codex, and any agent that supports skills.
+### URL parameters
+
+Customize how any gist renders by appending query params:
+
+| Param | Effect |
+|---|---|
+| `?theme=dark` | Force dark mode |
+| `?theme=light` | Force light mode |
+| `?noheader` | Hide title, tabs, and copy buttons |
+| `?nofooter` | Hide author info and footer |
+| `?mono` | Monospace font for all text |
+
+Combine them: `gists.sh/user/abc123?theme=dark&noheader&nofooter`
+
+### Raw content
+
+Append `.md` (or any extension) to get the raw file content with proper `Content-Type` headers:
+
+```
+gists.sh/user/abc123.md
+```
+
+## Agent skill
+
+Teach your coding agent to use gists.sh links whenever it creates or shares gists. Works with Claude Code, Codex, Cursor, and any agent that supports [skills](https://skills.sh).
 
 ```bash
 npx skills add linuz90/gists.sh
 ```
 
-After installing, any gist your agent creates automatically gets a clean `gists.sh` shareable link.
+## Self-hosting
+
+```bash
+pnpm install
+cp .env.local.example .env.local  # add your GITHUB_TOKEN
+pnpm dev
+```
+
+A [GitHub personal access token](https://github.com/settings/tokens) with the `gist` scope raises your API rate limit from 60 to 5,000 requests/hour. Note: the `gist` scope grants read access to all gists on the account, including secret ones. If that's a concern, use a token from a dedicated account with no sensitive gists.
+## Stack
+
+Next.js 15, Tailwind CSS v4, react-markdown, Shiki, deployed on Vercel.
+
+## Author
+
+Built by [Fabrizio Rinaldi](https://fabrizio.so) ([@linuz90](https://x.com/linuz90)).
