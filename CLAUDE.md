@@ -15,11 +15,10 @@ gists.sh is a beautiful, minimal GitHub Gist viewer. It wraps gist.github.com wi
 ## Development
 
 ```bash
-cd /home/fab/Code/gists.sh
-npm install
-npm run dev     # starts dev server on :3000
-npm run build   # production build (always run before pushing)
-npm run lint    # check for lint errors
+pnpm install
+pnpm dev        # starts dev server on :3000
+pnpm build      # production build (always run before pushing)
+pnpm lint       # check for lint errors
 ```
 
 ## Environment Variables
@@ -45,7 +44,7 @@ Copy `.env.local.example` to `.env.local` and fill in:
 ## Git Conventions
 
 - Commit with clear, descriptive messages
-- Always `npm run build` before pushing (catch type errors)
+- Always `pnpm build` before pushing (catch type errors)
 - Push to `main` branch
 
 ## Key Decisions
