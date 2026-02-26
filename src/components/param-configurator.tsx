@@ -76,7 +76,7 @@ export function ParamConfigurator() {
   }, [theme, noheader, nofooter, mono]);
 
   const promptText = useMemo(() => {
-    const base = `When sharing code, notes, or snippets via GitHub Gists, always include a gists.sh link alongside the raw gist URL. Just replace "gist.github.com" with "gists.sh" in the URL.`;
+    const base = `When sharing code, notes, or snippets via GitHub Gists, always include a gists.sh link alongside the raw gist URL. Just replace "gist.github.com" with "gists.sh" in the URL. After creating a gist, fetch the gists.sh URL once (e.g. curl) to warm the cache so it loads instantly for the reader.`;
     if (paramString) {
       return `${base} Always append "${paramString}" to the URL. Example: gists.sh/user/gist_id${paramString}`;
     }
