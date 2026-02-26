@@ -16,13 +16,6 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  outputFileTracingIncludes: {
-    "/[user]/[gistId]/opengraph-image": [
-      "./node_modules/geist/dist/fonts/geist-sans/Geist-SemiBold.ttf",
-      "./node_modules/geist/dist/fonts/geist-sans/Geist-Regular.ttf",
-      "./node_modules/geist/dist/fonts/geist-mono/GeistMono-Regular.ttf",
-    ],
-  },
   images: {
     remotePatterns: [
       {

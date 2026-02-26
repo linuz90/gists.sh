@@ -14,25 +14,11 @@ export default async function Image({
 }) {
   const { user, gistId } = await params;
 
+  const fontsDir = join(process.cwd(), "public/fonts");
   const [geistSemiBold, geistRegular, geistMono] = await Promise.all([
-    readFile(
-      join(
-        process.cwd(),
-        "node_modules/geist/dist/fonts/geist-sans/Geist-SemiBold.ttf",
-      ),
-    ),
-    readFile(
-      join(
-        process.cwd(),
-        "node_modules/geist/dist/fonts/geist-sans/Geist-Regular.ttf",
-      ),
-    ),
-    readFile(
-      join(
-        process.cwd(),
-        "node_modules/geist/dist/fonts/geist-mono/GeistMono-Regular.ttf",
-      ),
-    ),
+    readFile(join(fontsDir, "Geist-SemiBold.ttf")),
+    readFile(join(fontsDir, "Geist-Regular.ttf")),
+    readFile(join(fontsDir, "GeistMono-Regular.ttf")),
   ]);
 
   const gist = await fetchGist(gistId);
