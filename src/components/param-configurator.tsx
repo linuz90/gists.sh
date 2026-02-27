@@ -104,6 +104,8 @@ export function ParamConfigurator() {
   const promptText = useMemo(() => {
     const lines = [
       `When sharing code, notes, or snippets via GitHub Gists, always share the gists.sh link instead of the gist.github.com URL. Just replace "gist.github.com" with "gists.sh" in the URL.`,
+      `Always create secret gists (never --public unless explicitly asked). Use \`gh gist create <files> -d "descriptive title"\`. The -d description becomes the page title on gists.sh, so make it clear and useful.`,
+      `Use correct filenames with proper extensions (e.g. server.ts, config.yml, query.sql) so syntax highlighting works. For markdown content, use a .md file.`,
       `After creating a new gist, fetch the gists.sh URL once (e.g. curl) to warm the cache so the page loads instantly for the reader.`,
       `After updating an existing gist, POST to gists.sh/{user}/{gist_id}/refresh to bust the stale cache, then fetch the gists.sh URL to warm it with the updated content.`,
     ];

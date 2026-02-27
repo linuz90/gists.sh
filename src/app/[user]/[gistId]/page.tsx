@@ -5,7 +5,9 @@ import { FileTabs } from "@/components/file-tabs";
 import { HashScroller } from "@/components/hash-scroller";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { PageCopyButtons } from "@/components/page-copy-buttons";
+import { SecretBadge } from "@/components/secret-badge";
 import { fetchGist, fetchUser, isMarkdown } from "@/lib/github";
+import matter from "gray-matter";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -33,12 +35,8 @@ interface PageProps {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
-  const metaStart = performance.now();
   const { user, gistId } = await params;
   const gist = await fetchGist(gistId);
-  console.log(
-    `[PERF] generateMetadata: ${(performance.now() - metaStart).toFixed(0)}ms`,
-  );
 
   if (!gist) {
     return { title: "Not Found · gists.sh" };
@@ -48,37 +46,56 @@ export async function generateMetadata({
   const firstFile = files[0];
   const title = gist.description || firstFile?.filename || "Gist";
 
+  // Build a content preview for og:description instead of just "filename by author"
+  // Strip frontmatter before generating preview
+  const contentForPreview =
+    firstFile?.content && isMarkdown(firstFile.filename)
+      ? matter(firstFile.content).content
+      : firstFile?.content;
+  const rawPreview = contentForPreview
+    ? contentForPreview
+        .replace(/^#+\s+/gm, "") // strip markdown headings
+        .replace(/[*_`~\[\]]/g, "") // strip markdown formatting
+        .replace(/\s+/g, " ") // collapse whitespace
+        .trim()
+    : "";
+  const description = rawPreview
+    ? rawPreview.length > 200
+      ? rawPreview.slice(0, 200).replace(/\s+\S*$/, "") + "..."
+      : rawPreview
+    : `${firstFile?.filename} by ${user}`;
+
   return {
     title: `${title} · gists.sh`,
-    description: `${firstFile?.filename} by ${user}`,
+    description,
     ...(!gist.public && {
       robots: { index: false, follow: false },
     }),
     openGraph: {
       title,
-      description: `${firstFile?.filename} by ${user}`,
+      description,
       type: "article",
+      url: `https://gists.sh/${user}/${gistId}`,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
     },
   };
 }
 
 export default async function GistPage({ params, searchParams }: PageProps) {
-  const pageStart = performance.now();
   const { user, gistId } = await params;
   const resolvedSearchParams = await searchParams;
   const { file: fileParam } = resolvedSearchParams;
   const hideHeader = resolvedSearchParams.noheader !== undefined;
   const hideFooter = resolvedSearchParams.nofooter !== undefined;
   const monoMode = resolvedSearchParams.mono !== undefined;
-  const fetchStart = performance.now();
   const [gist, githubUser] = await Promise.all([
     fetchGist(gistId),
     fetchUser(user),
   ]);
-  const fetchEnd = performance.now();
-  console.log(
-    `[PERF] Fetch gist+user: ${(fetchEnd - fetchStart).toFixed(0)}ms`,
-  );
 
   if (!gist) {
     notFound();
@@ -94,8 +111,7 @@ export default async function GistPage({ params, searchParams }: PageProps) {
 
   const activeFilename = activeFile.filename;
 
-  const renderStart = performance.now();
-  const jsx = (
+  return (
     <main className="min-h-screen flex flex-col">
       <HashScroller />
       <div
@@ -105,12 +121,13 @@ export default async function GistPage({ params, searchParams }: PageProps) {
         {!hideHeader && (
           <header className="flex items-start justify-between mb-8">
             <div className="min-w-0">
-              <h1 className="text-sm font-mono font-medium text-neutral-700 dark:text-neutral-300 truncate">
-                {activeFilename}
+              <h1 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 truncate">
+                {gist.description || activeFilename}
+                {!gist.public && <SecretBadge />}
               </h1>
-              {gist.description && (
-                <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-500 truncate">
-                  {gist.description}
+              {gist.description && filenames.length === 1 && (
+                <p className="mt-1 text-xs font-mono text-neutral-500 dark:text-neutral-500 truncate">
+                  {activeFilename}
                 </p>
               )}
             </div>
@@ -185,12 +202,4 @@ export default async function GistPage({ params, searchParams }: PageProps) {
       </div>
     </main>
   );
-  const renderEnd = performance.now();
-  console.log(
-    `[PERF] JSX construction: ${(renderEnd - renderStart).toFixed(0)}ms`,
-  );
-  console.log(
-    `[PERF] Total page component: ${(renderEnd - pageStart).toFixed(0)}ms`,
-  );
-  return jsx;
 }

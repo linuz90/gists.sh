@@ -24,8 +24,15 @@ export default async function Image({
   const gist = await fetchGist(gistId);
   const files = gist ? Object.values(gist.files) : [];
   const firstFile = files[0];
-  const filename = firstFile?.filename || "Untitled";
   const description = gist?.description || null;
+
+  // Show all filenames, trimmed to fit
+  const allFilenames = files.map((f) => f.filename).join(", ");
+  const filenamesDisplay =
+    allFilenames.length > 60
+      ? allFilenames.slice(0, 57) + "..."
+      : allFilenames;
+  const filename = filenamesDisplay || firstFile?.filename || "Untitled";
 
   return new ImageResponse(
     <div

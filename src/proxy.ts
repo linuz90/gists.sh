@@ -69,10 +69,25 @@ export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const parts = pathname.split("/").filter(Boolean);
 
-  // Only handle /{user}/{gistId.ext} pattern for raw rewrites
   if (parts.length === 2) {
     const gistIdWithExt = parts[1];
 
+    // Content negotiation: serve raw content when AI agents request text/markdown
+    const accept = request.headers.get("accept") || "";
+    const wantsRawContent =
+      accept.includes("text/markdown") ||
+      (accept.includes("text/plain") && !accept.includes("text/html"));
+
+    if (
+      wantsRawContent &&
+      /^[a-f0-9]{20}$|^[a-f0-9]{32}$/.test(gistIdWithExt)
+    ) {
+      const url = request.nextUrl.clone();
+      url.pathname = `/api/raw/${gistIdWithExt}`;
+      return applySecurityHeaders(NextResponse.rewrite(url));
+    }
+
+    // Handle /{user}/{gistId.ext} pattern for raw rewrites
     for (const ext of RAW_EXTENSIONS) {
       if (gistIdWithExt.endsWith(ext)) {
         const gistId = gistIdWithExt.slice(0, -ext.length);
