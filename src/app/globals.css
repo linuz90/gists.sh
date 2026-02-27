@@ -4,6 +4,10 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Pre-set outline-color so Tailwind transition-colors never flashes */
 * {
   outline-color: color-mix(in srgb, currentColor 25%, transparent);
@@ -42,13 +46,23 @@ summary {
   --font-mono:
     var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo,
     Consolas, "Liberation Mono", monospace;
+
+  /* Intermediate neutral steps (midpoints between Tailwind's defaults) */
+  --color-neutral-150: oklch(94.6% 0 0);
+  --color-neutral-250: oklch(89.6% 0 0);
+  --color-neutral-350: oklch(78.9% 0 0);
+  --color-neutral-450: oklch(63.2% 0 0);
+  --color-neutral-550: oklch(49.75% 0 0);
+  --color-neutral-650: oklch(40.5% 0 0);
+  --color-neutral-750: oklch(32% 0 0);
+  --color-neutral-850: oklch(23.7% 0 0);
 }
 
 /* ── Markdown prose ─────────────────────────────────────────────── */
 
 .markdown-body {
   --md-prose-size: 0.9375rem;
-  color: #1a1a1a;
+  color: var(--color-neutral-900);
   line-height: 1.75;
   font-size: var(--md-prose-size);
   overflow-wrap: break-word;
@@ -64,7 +78,7 @@ summary {
 .markdown-body h2,
 .markdown-body h3,
 .markdown-body h4 {
-  color: #0a0a0a;
+  color: var(--color-neutral-950);
   font-weight: 600;
   letter-spacing: -0.015em;
   margin-top: 2em;
@@ -75,6 +89,36 @@ summary {
 
 .markdown-body :is(h1, h2, h3, h4)[id] {
   scroll-margin-top: 2rem;
+  position: relative;
+}
+
+/* Heading anchor links (injected by rehype-autolink-headings).
+   We target a[aria-hidden] instead of a class because rehype-sanitize
+   strips class values that aren't explicitly allowlisted. */
+.markdown-body :is(h1, h2, h3, h4) > a[aria-hidden] {
+  position: absolute;
+  left: -1.5em;
+  padding-right: 1.5em;
+  color: var(--color-neutral-350);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.markdown-body :is(h1, h2, h3, h4) > a[aria-hidden] svg {
+  display: block;
+}
+
+.markdown-body :is(h1, h2, h3, h4):hover > a[aria-hidden],
+.markdown-body :is(h1, h2, h3, h4) > a[aria-hidden]:focus {
+  opacity: 1;
+}
+
+.dark .markdown-body :is(h1, h2, h3, h4) > a[aria-hidden] {
+  color: var(--color-neutral-700);
 }
 
 .markdown-body h1 {
@@ -110,7 +154,7 @@ summary {
   list-style-type: decimal;
 }
 .markdown-body ::marker {
-  color: #737373;
+  color: var(--color-neutral-500);
 }
 
 .markdown-body li {
@@ -126,20 +170,20 @@ summary {
 
 /* Links */
 .markdown-body a {
-  color: #0a0a0a;
+  color: var(--color-neutral-950);
   text-decoration: underline;
-  text-decoration-color: #d4d4d4;
+  text-decoration-color: var(--color-neutral-300);
   text-underline-offset: 4px;
   transition: text-decoration-color 0.15s;
 }
 
 .markdown-body a:hover {
-  text-decoration-color: #737373;
+  text-decoration-color: var(--color-neutral-500);
 }
 
 /* Inline code */
 .markdown-body :not(pre) > code {
-  background: #f5f5f5;
+  background: var(--color-neutral-100);
   padding: 0.15em 0.4em;
   border-radius: 0.25rem;
   font-size: 0.8125em;
@@ -148,7 +192,7 @@ summary {
 
 /* Code blocks (pre without Shiki) */
 .markdown-body pre:not(.shiki) {
-  background: #fafafa;
+  background: var(--color-neutral-50);
   border-radius: 0.5rem;
   padding: 1.25rem;
   overflow-x: auto;
@@ -160,9 +204,9 @@ summary {
 
 /* Blockquotes */
 .markdown-body blockquote:not(.markdown-alert) {
-  border-left: 3px solid #d4d4d4;
+  border-left: 3px solid var(--color-neutral-300);
   padding-left: 1em;
-  color: #525252;
+  color: var(--color-neutral-600);
   margin-top: 1.5em;
   margin-bottom: 1.5em;
   font-style: normal;
@@ -186,30 +230,30 @@ summary {
 }
 
 .markdown-body .markdown-alert-note {
-  background: #eff6ff;
-  border-color: #bfdbfe;
+  background: var(--color-blue-50);
+  border-color: var(--color-blue-200);
 }
 .markdown-body .markdown-alert-tip {
-  background: #f0fdf4;
-  border-color: #bbf7d0;
+  background: var(--color-green-50);
+  border-color: var(--color-green-200);
 }
 .markdown-body .markdown-alert-important {
-  background: #faf5ff;
-  border-color: #e9d5ff;
+  background: var(--color-purple-50);
+  border-color: var(--color-purple-200);
 }
 .markdown-body .markdown-alert-warning {
-  background: #fffbeb;
-  border-color: #fde68a;
+  background: var(--color-amber-50);
+  border-color: var(--color-amber-200);
 }
 .markdown-body .markdown-alert-caution {
-  background: #fef2f2;
-  border-color: #fecaca;
+  background: var(--color-red-50);
+  border-color: var(--color-red-200);
 }
 
 /* Horizontal rules */
 .markdown-body hr {
   border: none;
-  border-top: 1px solid #e5e5e5;
+  border-top: 1px solid var(--color-neutral-200);
   margin: 2em 0;
 }
 
@@ -234,7 +278,7 @@ summary {
 .markdown-body td {
   padding: 0.5rem 1rem;
   text-align: left;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 1px solid var(--color-neutral-200);
 }
 
 .markdown-body th:first-child,
@@ -249,8 +293,8 @@ summary {
 
 .markdown-body th {
   font-weight: 600;
-  color: #0a0a0a;
-  border-bottom-color: #d4d4d4;
+  color: var(--color-neutral-950);
+  border-bottom-color: var(--color-neutral-300);
 }
 
 /* Hide last-row border when table is directly followed by an hr */
@@ -266,40 +310,40 @@ summary {
 /* ── Dark mode ──────────────────────────────────────────────────── */
 
 .dark .markdown-body {
-  color: #d4d4d4;
+  color: var(--color-neutral-300);
 }
 
 .dark .markdown-body h1,
 .dark .markdown-body h2,
 .dark .markdown-body h3,
 .dark .markdown-body h4 {
-  color: #fafafa;
+  color: var(--color-neutral-50);
 }
 
 .dark .markdown-body a {
-  color: #fafafa;
-  text-decoration-color: #404040;
+  color: var(--color-neutral-50);
+  text-decoration-color: var(--color-neutral-700);
 }
 
 .dark .markdown-body a:hover {
-  text-decoration-color: #737373;
+  text-decoration-color: var(--color-neutral-500);
 }
 
 .dark .markdown-body :not(pre) > code {
-  background: #262626;
+  background: var(--color-neutral-800);
 }
 
 .dark .markdown-body pre:not(.shiki) {
-  background: #171717;
+  background: var(--color-neutral-900);
 }
 
 .dark .markdown-body ::marker {
-  color: #525252;
+  color: var(--color-neutral-600);
 }
 
 .dark .markdown-body blockquote:not(.markdown-alert) {
-  border-left-color: #404040;
-  color: #a3a3a3;
+  border-left-color: var(--color-neutral-700);
+  color: var(--color-neutral-400);
 }
 
 .dark .markdown-body .markdown-alert-note {
@@ -333,14 +377,14 @@ summary {
 }
 
 .dark .markdown-body th {
-  color: #fafafa;
+  color: var(--color-neutral-50);
   border-bottom-color: rgba(255, 255, 255, 0.2);
 }
 
 /* ── Shiki code blocks ──────────────────────────────────────────── */
 
 pre.shiki {
-  background-color: #fafafa !important;
+  background-color: var(--color-neutral-50) !important;
   border-radius: 0.5rem;
   padding: 1.25rem;
   overflow-x: auto;
@@ -351,7 +395,7 @@ pre.shiki {
 }
 
 .dark pre.shiki {
-  background-color: #171717 !important;
+  background-color: var(--color-neutral-900) !important;
 }
 
 .dark .shiki {
@@ -410,8 +454,8 @@ pre code {
   transform: translateX(-50%) translateY(4px);
   padding: 4px 8px;
   border-radius: 6px;
-  background: #171717;
-  color: #fafafa;
+  background: var(--color-neutral-900);
+  color: var(--color-neutral-50);
   font-size: 0.6875rem;
   line-height: 1.4;
   white-space: nowrap;
@@ -430,7 +474,7 @@ pre code {
   left: 50%;
   transform: translateX(-50%) translateY(4px);
   border: 4px solid transparent;
-  border-top-color: #171717;
+  border-top-color: var(--color-neutral-900);
   pointer-events: none;
   opacity: 0;
   transition:
@@ -446,12 +490,12 @@ pre code {
 }
 
 .dark [data-tooltip]::before {
-  background: #e5e5e5;
-  color: #171717;
+  background: var(--color-neutral-200);
+  color: var(--color-neutral-900);
 }
 
 .dark [data-tooltip]::after {
-  border-top-color: #e5e5e5;
+  border-top-color: var(--color-neutral-200);
 }
 
 /* ── Code block copy buttons ──────────────────────────────────── */
@@ -468,7 +512,7 @@ pre code {
   border-radius: 0.25rem;
   background: transparent;
   border: none;
-  color: #a3a3a3;
+  color: var(--color-neutral-400);
   cursor: pointer;
   opacity: 0.7;
   transition:
@@ -494,32 +538,32 @@ pre code {
 }
 
 .code-copy-btn:hover {
-  color: #525252;
+  color: var(--color-neutral-600);
 }
 
 .code-copy-btn--copied {
-  color: #16a34a;
+  color: var(--color-green-600);
   opacity: 1;
 }
 
 .code-copy-btn--copied:hover {
-  color: #16a34a;
+  color: var(--color-green-600);
 }
 
 .dark .code-copy-btn {
-  color: #737373;
+  color: var(--color-neutral-500);
 }
 
 .dark .code-copy-btn:hover {
-  color: #a3a3a3;
+  color: var(--color-neutral-400);
 }
 
 .dark .code-copy-btn--copied {
-  color: #4ade80;
+  color: var(--color-green-400);
 }
 
 .dark .code-copy-btn--copied:hover {
-  color: #4ade80;
+  color: var(--color-green-400);
 }
 
 /* ── Task list checkboxes ─────────────────────────────────────── */
@@ -529,7 +573,7 @@ pre code {
   appearance: none;
   width: 1em;
   height: 1em;
-  border: 1.5px solid #d4d4d4;
+  border: 1.5px solid var(--color-neutral-300);
   border-radius: 0.2em;
   vertical-align: -0.125em;
   margin: 0 0.35em 0 0;
@@ -539,8 +583,8 @@ pre code {
 }
 
 .markdown-body input[type="checkbox"]:checked {
-  background: #0a0a0a;
-  border-color: #0a0a0a;
+  background: var(--color-neutral-950);
+  border-color: var(--color-neutral-950);
 }
 
 .markdown-body input[type="checkbox"]:checked::after {
@@ -556,16 +600,16 @@ pre code {
 }
 
 .dark .markdown-body input[type="checkbox"] {
-  border-color: #525252;
+  border-color: var(--color-neutral-600);
 }
 
 .dark .markdown-body input[type="checkbox"]:checked {
-  background: #fafafa;
-  border-color: #fafafa;
+  background: var(--color-neutral-50);
+  border-color: var(--color-neutral-50);
 }
 
 .dark .markdown-body input[type="checkbox"]:checked::after {
-  border-color: #171717;
+  border-color: var(--color-neutral-900);
 }
 
 /* Remove bullet from task list items */

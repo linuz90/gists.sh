@@ -1,7 +1,9 @@
+import { HeadingAnchorHandler } from "@/components/heading-anchor-handler";
 import { rehypeExtractToc } from "@/lib/rehype-extract-toc";
 import type { TocEntry } from "@/lib/toc";
 import rehypeShiki from "@shikijs/rehype";
 import matter from "gray-matter";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 import rehypeRaw from "rehype-raw";
 import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
 import rehypeSlug from "rehype-slug";
@@ -17,6 +19,7 @@ const sanitizeSchema: typeof defaultSchema = {
   ...defaultSchema,
   clobber: [],
   clobberPrefix: "",
+  tagNames: [...(defaultSchema.tagNames ?? []), "svg", "path"],
   attributes: {
     ...defaultSchema.attributes,
     h1: [...(defaultSchema.attributes?.h1 ?? []), "id"],
@@ -43,6 +46,14 @@ const sanitizeSchema: typeof defaultSchema = {
         /^(background-color|color):#[0-9a-fA-F]{3,8}(;(background-color|color):#[0-9a-fA-F]{3,8})*;?$/,
       ],
     ],
+    a: [
+      ...(defaultSchema.attributes?.a ?? []),
+      "ariaHidden",
+      "ariaLabel",
+      "tabIndex",
+    ],
+    svg: ["xmlns", "viewBox", "width", "height", "fill"],
+    path: ["d"],
     "*": [...(defaultSchema.attributes?.["*"] ?? []), "className"],
   },
 };
@@ -277,6 +288,38 @@ export async function MarkdownRenderer({ content }: MarkdownRendererProps) {
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypeRaw)
     .use(rehypeSlug)
+    // Adds a clickable link icon before each heading (like GitHub).
+    // We use ariaHidden instead of className because rehype-sanitize
+    // strips unrecognized class values. CSS targets a[aria-hidden] instead.
+    // Click behavior (copy permalink + toast) is in <HeadingAnchorHandler>.
+    .use(rehypeAutolinkHeadings, {
+      behavior: "prepend",
+      properties: {
+        ariaHidden: "true",
+        tabIndex: -1,
+      },
+      content: {
+        type: "element",
+        tagName: "svg",
+        properties: {
+          xmlns: "http://www.w3.org/2000/svg",
+          viewBox: "0 0 16 16",
+          width: 16,
+          height: 16,
+          fill: "currentColor",
+        },
+        children: [
+          {
+            type: "element",
+            tagName: "path",
+            properties: {
+              d: "m7.775 3.275 1.25-1.25a3.5 3.5 0 1 1 4.95 4.95l-2.5 2.5a3.5 3.5 0 0 1-4.95 0 .751.751 0 0 1 .018-1.042.751.751 0 0 1 1.042-.018 1.998 1.998 0 0 0 2.83 0l2.5-2.5a2.002 2.002 0 0 0-2.83-2.83l-1.25 1.25a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042Zm-4.69 9.64a1.998 1.998 0 0 0 2.83 0l1.25-1.25a.751.751 0 0 1 1.042.018.751.751 0 0 1 .018 1.042l-1.25 1.25a3.5 3.5 0 1 1-4.95-4.95l2.5-2.5a3.5 3.5 0 0 1 4.95 0 .751.751 0 0 1-.018 1.042.751.751 0 0 1-1.042.018 1.998 1.998 0 0 0-2.83 0l-2.5 2.5a1.998 1.998 0 0 0 0 2.83Z",
+            },
+            children: [],
+          },
+        ],
+      },
+    })
     .use(rehypeSanitize, sanitizeSchema)
     .use(rehypeExtractToc(headings))
     .use(rehypeShiki, {
@@ -291,6 +334,7 @@ export async function MarkdownRenderer({ content }: MarkdownRendererProps) {
 
   return (
     <>
+      <HeadingAnchorHandler />
       {hasFrontmatter && <FrontmatterDisplay data={frontmatter} />}
       <div
         className="markdown-body max-w-none"

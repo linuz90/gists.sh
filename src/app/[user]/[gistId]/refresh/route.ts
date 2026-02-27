@@ -27,9 +27,9 @@ export async function POST(
   }
 
   cooldowns.set(gistId, now);
-  // expire must match the revalidate window in fetchGist() so Next.js
-  // correctly identifies and purges the ISR fetch cache entry for this tag
-  revalidateTag(`gist-${gistId}`, { expire: 86400 });
+  // Route handlers used by external callers (webhooks/agents) should force
+  // immediate expiration so the next request is a blocking revalidate.
+  revalidateTag(`gist-${gistId}`, { expire: 0 });
 
   return NextResponse.json({ revalidated: true });
 }
