@@ -1,6 +1,6 @@
 "use client";
 
-import { Clipboard } from "lucide-react";
+import { Copy } from "lucide-react";
 import { useState } from "react";
 
 type GistTab = "README.md" | "SKILL.md" | "example.ts";
@@ -26,7 +26,7 @@ export function GistsMockup() {
           </div>
           <div className="flex items-center ml-3 shrink-0">
             <div className="p-1.5 rounded-md text-neutral-400 dark:text-neutral-600">
-              <Clipboard size={16} />
+              <Copy size={16} />
             </div>
           </div>
         </div>

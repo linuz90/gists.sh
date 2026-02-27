@@ -4,9 +4,9 @@ import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import {
   Check,
-  Clipboard,
-  ClipboardPaste,
+  Copy,
   ExternalLink,
+  Files,
   Link,
   RotateCw,
 } from "lucide-react";
@@ -155,18 +155,18 @@ export function PageCopyButtons({
             {copied ? (
               <Check size={15} className="text-green-600 dark:text-green-400" />
             ) : (
-              <Clipboard size={15} className="opacity-60" />
+              <Copy size={15} className="opacity-60" />
             )}
           </button>
         </DropdownMenu.Trigger>
         <DropdownMenu.Content side="bottom" align="end">
           <DropdownMenu.Item onSelect={handleCopyRaw}>
-            <Clipboard size={14} />
+            <Copy size={14} />
             <span className="flex-1">Copy raw</span>
             <span className={shortcutClass}>C</span>
           </DropdownMenu.Item>
           <DropdownMenu.Item onSelect={handleCopyFormatted}>
-            <ClipboardPaste size={14} />
+            <Files size={14} />
             <span className="flex-1">Copy formatted</span>
             <span className={shortcutClass}>F</span>
           </DropdownMenu.Item>

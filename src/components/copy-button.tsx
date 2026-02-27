@@ -1,7 +1,7 @@
 "use client";
 
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
-import { Check, Clipboard } from "lucide-react";
+import { Check, Copy } from "lucide-react";
 
 interface CopyButtonProps {
   text: string;
@@ -30,7 +30,7 @@ export function CopyButton({
       ) : copied ? (
         <Check size={16} className="text-green-600 dark:text-green-400" />
       ) : (
-        <Clipboard size={16} className="opacity-60" />
+        <Copy size={16} className="opacity-60" />
       )}
     </button>
   );
