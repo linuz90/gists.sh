@@ -1,9 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 
 const RAW_EXTENSIONS = [
-  ".md", ".txt", ".json", ".js", ".ts", ".py", ".css", ".html",
-  ".xml", ".yaml", ".yml", ".toml", ".sh", ".go", ".rs", ".rb",
-  ".java", ".c", ".cpp", ".swift", ".kt", ".sql",
+  ".md",
+  ".txt",
+  ".json",
+  ".js",
+  ".ts",
+  ".py",
+  ".css",
+  ".html",
+  ".xml",
+  ".yaml",
+  ".yml",
+  ".toml",
+  ".sh",
+  ".go",
+  ".rs",
+  ".rb",
+  ".java",
+  ".c",
+  ".cpp",
+  ".swift",
+  ".kt",
+  ".sql",
 ];
 
 const isDev = process.env.NODE_ENV === "development";
@@ -36,8 +55,7 @@ const securityHeaders: Record<string, string> = {
   "X-XSS-Protection": "0",
   "Referrer-Policy": "strict-origin-when-cross-origin",
   "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
-  "Strict-Transport-Security":
-    "max-age=63072000; includeSubDomains; preload",
+  "Strict-Transport-Security": "max-age=63072000; includeSubDomains; preload",
 };
 
 function applySecurityHeaders(response: NextResponse): NextResponse {

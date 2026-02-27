@@ -19,8 +19,9 @@ summary {
 
 @theme {
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono",
-    Menlo, Consolas, "Liberation Mono", monospace;
+  --font-mono:
+    var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+    Consolas, "Liberation Mono", monospace;
 }
 
 /* ── Markdown prose ─────────────────────────────────────────────── */
@@ -54,10 +55,18 @@ summary {
   scroll-margin-top: 2rem;
 }
 
-.markdown-body h1 { font-size: 1.75rem; }
-.markdown-body h2 { font-size: 1.375rem; }
-.markdown-body h3 { font-size: 1.175rem; }
-.markdown-body h4 { font-size: 1.05rem; }
+.markdown-body h1 {
+  font-size: 1.75rem;
+}
+.markdown-body h2 {
+  font-size: 1.375rem;
+}
+.markdown-body h3 {
+  font-size: 1.175rem;
+}
+.markdown-body h4 {
+  font-size: 1.05rem;
+}
 
 /* Paragraphs & lists */
 .markdown-body p {
@@ -72,9 +81,15 @@ summary {
   padding-left: 1.5em;
 }
 
-.markdown-body ul { list-style-type: disc; }
-.markdown-body ol { list-style-type: decimal; }
-.markdown-body ::marker { color: #737373; }
+.markdown-body ul {
+  list-style-type: disc;
+}
+.markdown-body ol {
+  list-style-type: decimal;
+}
+.markdown-body ::marker {
+  color: #737373;
+}
 
 .markdown-body li {
   margin-top: 0.375em;
@@ -217,7 +232,9 @@ summary {
 }
 
 /* Strong & emphasis */
-.markdown-body strong { font-weight: 600; }
+.markdown-body strong {
+  font-weight: 600;
+}
 
 /* ── Dark mode ──────────────────────────────────────────────────── */
 
@@ -249,7 +266,9 @@ summary {
   background: #171717;
 }
 
-.dark .markdown-body ::marker { color: #525252; }
+.dark .markdown-body ::marker {
+  color: #525252;
+}
 
 .dark .markdown-body blockquote:not(.markdown-alert) {
   border-left-color: #404040;
@@ -324,15 +343,31 @@ pre code {
 
 /* Radix tooltip fade animations */
 @keyframes fade-in {
-  from { opacity: 0; transform: translateY(2px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes fade-out {
-  from { opacity: 1; transform: translateY(0); }
-  to { opacity: 0; transform: translateY(2px); }
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(2px);
+  }
 }
-.animate-fade-in { animation: fade-in 0.15s ease; }
-.animate-fade-out { animation: fade-out 0.15s ease; }
+.animate-fade-in {
+  animation: fade-in 0.15s ease;
+}
+.animate-fade-out {
+  animation: fade-out 0.15s ease;
+}
 
 /* data-tooltip variant for vanilla DOM elements */
 [data-tooltip] {
@@ -354,7 +389,9 @@ pre code {
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
   z-index: 50;
 }
 
@@ -368,7 +405,9 @@ pre code {
   border-top-color: #171717;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.15s ease, transform 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
   z-index: 50;
 }
 
@@ -404,7 +443,9 @@ pre code {
   color: #a3a3a3;
   cursor: pointer;
   opacity: 0.7;
-  transition: opacity 0.15s ease, color 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease;
   line-height: 0;
   z-index: 10;
   /* Smaller on touch devices where it's always visible */

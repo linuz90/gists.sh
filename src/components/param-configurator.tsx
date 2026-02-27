@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { CopyButton } from "@/components/copy-button";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type Theme = "auto" | "dark" | "light";
 
@@ -42,10 +42,20 @@ const PARAM_DOCS = [
   { param: "mono", desc: "Monospace font for all text" },
 ];
 
-function CopiableBlock({ text, className, preserveNewlines }: { text: string; className?: string; preserveNewlines?: boolean }) {
+function CopiableBlock({
+  text,
+  className,
+  preserveNewlines,
+}: {
+  text: string;
+  className?: string;
+  preserveNewlines?: boolean;
+}) {
   return (
     <div className="relative group">
-      <div className={`font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 pr-12 text-neutral-700 dark:text-neutral-300 ${preserveNewlines ? "whitespace-pre-wrap" : ""} ${className ?? ""}`}>
+      <div
+        className={`font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 pr-12 text-neutral-700 dark:text-neutral-300 ${preserveNewlines ? "whitespace-pre-wrap" : ""} ${className ?? ""}`}
+      >
         {text}
       </div>
       <div className="absolute top-2.5 right-2.5 opacity-70 scale-85 [@media(hover:hover)_and_(pointer:fine)]:opacity-0 [@media(hover:hover)_and_(pointer:fine)]:scale-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100 transition-opacity">
@@ -140,19 +150,37 @@ export function ParamConfigurator() {
             light
           </button>
           <button
-            onClick={() => setNoheader((v) => { const next = !v; persist({ theme, noheader: next, nofooter, mono }); return next; })}
+            onClick={() =>
+              setNoheader((v) => {
+                const next = !v;
+                persist({ theme, noheader: next, nofooter, mono });
+                return next;
+              })
+            }
             className={`${chipBase} ${noheader ? chipActive : chipInactive}`}
           >
             noheader
           </button>
           <button
-            onClick={() => setNofooter((v) => { const next = !v; persist({ theme, noheader, nofooter: next, mono }); return next; })}
+            onClick={() =>
+              setNofooter((v) => {
+                const next = !v;
+                persist({ theme, noheader, nofooter: next, mono });
+                return next;
+              })
+            }
             className={`${chipBase} ${nofooter ? chipActive : chipInactive}`}
           >
             nofooter
           </button>
           <button
-            onClick={() => setMono((v) => { const next = !v; persist({ theme, noheader, nofooter, mono: next }); return next; })}
+            onClick={() =>
+              setMono((v) => {
+                const next = !v;
+                persist({ theme, noheader, nofooter, mono: next });
+                return next;
+              })
+            }
             className={`${chipBase} ${mono ? chipActive : chipInactive}`}
           >
             mono
@@ -160,6 +188,7 @@ export function ParamConfigurator() {
         </div>
         <Link
           href={`/linuz90/c77fd6ba8ca775f9b64bb7ae085537a4${paramString}`}
+          target="_blank"
           className="block font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 hover:bg-neutral-200/70 dark:hover:bg-neutral-800 transition-colors space-y-2 overflow-hidden"
         >
           <div className="text-neutral-500 dark:text-neutral-600 break-all">
@@ -211,7 +240,10 @@ export function ParamConfigurator() {
           Install the skill and every gist your AI agent creates automatically
           gets a clean gists.sh link.
         </p>
-        <CopiableBlock text="npx skills add linuz90/gists.sh" className="overflow-x-auto" />
+        <CopiableBlock
+          text="npx skills add linuz90/gists.sh"
+          className="overflow-x-auto"
+        />
       </div>
 
       {/* Or just prompt it */}
@@ -224,7 +256,11 @@ export function ParamConfigurator() {
           (OpenClaw 🦞, Claude Code, Cursor, etc.) and it will use gists.sh
           automatically.
         </p>
-        <CopiableBlock text={promptText} className="leading-relaxed break-words" preserveNewlines />
+        <CopiableBlock
+          text={promptText}
+          className="leading-relaxed break-words"
+          preserveNewlines
+        />
       </div>
     </>
   );

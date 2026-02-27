@@ -52,7 +52,9 @@ export async function fetchUser(username: string): Promise<GitHubUser | null> {
       headers,
       next: { revalidate: 86400 },
     });
-    console.log(`[PERF] fetchUser(${username}): ${(performance.now() - start).toFixed(0)}ms (status: ${res.status})`);
+    console.log(
+      `[PERF] fetchUser(${username}): ${(performance.now() - start).toFixed(0)}ms (status: ${res.status})`,
+    );
 
     if (!res.ok) return null;
 
@@ -71,7 +73,9 @@ export function isValidGistId(id: string): boolean {
 }
 
 export function isValidUsername(username: string): boolean {
-  return username.length >= 1 && username.length <= 39 && USERNAME_RE.test(username);
+  return (
+    username.length >= 1 && username.length <= 39 && USERNAME_RE.test(username)
+  );
 }
 
 export async function fetchGist(gistId: string): Promise<Gist | null> {
@@ -91,14 +95,18 @@ export async function fetchGist(gistId: string): Promise<Gist | null> {
     // Tag enables on-demand purge via POST /{user}/{gistId}/refresh
     next: { revalidate: 86400, tags: [`gist-${gistId}`] },
   });
-  console.log(`[PERF] fetchGist(${gistId}): ${(performance.now() - start).toFixed(0)}ms (status: ${res.status})`);
+  console.log(
+    `[PERF] fetchGist(${gistId}): ${(performance.now() - start).toFixed(0)}ms (status: ${res.status})`,
+  );
 
   if (res.status === 404) return null;
 
   if (res.status === 403) {
     const remaining = res.headers.get("x-ratelimit-remaining");
     if (remaining === "0") {
-      throw new Error("GitHub API rate limit exceeded. Please try again later.");
+      throw new Error(
+        "GitHub API rate limit exceeded. Please try again later.",
+      );
     }
   }
 

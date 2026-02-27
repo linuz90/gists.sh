@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { revalidateTag } from "next/cache";
 import { isValidGistId } from "@/lib/github";
+import { revalidateTag } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 
 // Best-effort rate limit: in-memory, so resets on cold starts (fine for serverless)
 const cooldowns = new Map<string, number>();
@@ -8,7 +8,7 @@ const COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 
 export async function POST(
   _request: NextRequest,
-  { params }: { params: Promise<{ user: string; gistId: string }> }
+  { params }: { params: Promise<{ user: string; gistId: string }> },
 ) {
   const { gistId } = await params;
 
@@ -22,7 +22,7 @@ export async function POST(
     const retryAfter = Math.ceil((COOLDOWN_MS - (now - lastRefresh)) / 1000);
     return NextResponse.json(
       { error: "Too many refresh requests" },
-      { status: 429, headers: { "Retry-After": String(retryAfter) } }
+      { status: 429, headers: { "Retry-After": String(retryAfter) } },
     );
   }
 

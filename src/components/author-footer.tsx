@@ -1,7 +1,7 @@
-import Image from "next/image";
-import { Globe, MapPin } from "lucide-react";
 import { XIcon } from "@/components/icons";
 import type { GitHubUser } from "@/lib/github";
+import { Globe, MapPin } from "lucide-react";
+import Image from "next/image";
 
 function cleanBlogUrl(blog: string): string {
   return blog.replace(/^https?:\/\//, "").replace(/\/$/, "");
@@ -81,8 +81,7 @@ export function AuthorFooter({ user }: AuthorFooterProps) {
                   rel="noopener noreferrer"
                   className="flex items-center gap-1 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
                 >
-                  <XIcon className="shrink-0" />
-                  @{user.twitter_username}
+                  <XIcon className="shrink-0" />@{user.twitter_username}
                 </a>
               )}
             </div>

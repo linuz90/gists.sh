@@ -1,7 +1,7 @@
-import type { Root, Element } from "hast";
-import { visit } from "unist-util-visit";
+import type { Element, Root } from "hast";
 import { headingRank } from "hast-util-heading-rank";
 import { toString } from "hast-util-to-string";
+import { visit } from "unist-util-visit";
 import type { TocEntry } from "./toc";
 
 export function rehypeExtractToc(entries: TocEntry[]) {

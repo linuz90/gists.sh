@@ -1,15 +1,15 @@
-import { unified } from "unified";
-import remarkParse from "remark-parse";
+import { rehypeExtractToc } from "@/lib/rehype-extract-toc";
+import type { TocEntry } from "@/lib/toc";
+import rehypeShiki from "@shikijs/rehype";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
+import rehypeSlug from "rehype-slug";
+import rehypeStringify from "rehype-stringify";
 import remarkGfm from "remark-gfm";
 import { remarkAlert } from "remark-github-blockquote-alert";
+import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
-import rehypeRaw from "rehype-raw";
-import rehypeSlug from "rehype-slug";
-import rehypeShiki from "@shikijs/rehype";
-import rehypeSanitize, { defaultSchema } from "rehype-sanitize";
-import rehypeStringify from "rehype-stringify";
-import type { TocEntry } from "@/lib/toc";
-import { rehypeExtractToc } from "@/lib/rehype-extract-toc";
+import { unified } from "unified";
 import { TableOfContents } from "./table-of-contents";
 
 const sanitizeSchema: typeof defaultSchema = {
@@ -30,11 +30,17 @@ const sanitizeSchema: typeof defaultSchema = {
     ],
     pre: [
       ...(defaultSchema.attributes?.pre ?? []),
-      ["style", /^(background-color|color):#[0-9a-fA-F]{3,8}(;(background-color|color):#[0-9a-fA-F]{3,8})*;?$/],
+      [
+        "style",
+        /^(background-color|color):#[0-9a-fA-F]{3,8}(;(background-color|color):#[0-9a-fA-F]{3,8})*;?$/,
+      ],
     ],
     code: [
       ...(defaultSchema.attributes?.code ?? []),
-      ["style", /^(background-color|color):#[0-9a-fA-F]{3,8}(;(background-color|color):#[0-9a-fA-F]{3,8})*;?$/],
+      [
+        "style",
+        /^(background-color|color):#[0-9a-fA-F]{3,8}(;(background-color|color):#[0-9a-fA-F]{3,8})*;?$/,
+      ],
     ],
     "*": [...(defaultSchema.attributes?.["*"] ?? []), "className"],
   },

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { copyFormattedToClipboard, copyToClipboard } from "@/lib/clipboard";
+import { useCallback, useRef, useState } from "react";
 import { toast } from "sonner";
-import { copyToClipboard, copyFormattedToClipboard } from "@/lib/clipboard";
 
 export function useCopyToClipboard() {
   const [copied, setCopied] = useState(false);
@@ -15,15 +15,21 @@ export function useCopyToClipboard() {
     timeoutRef.current = setTimeout(() => setCopied(false), 2000);
   }, []);
 
-  const copy = useCallback(async (text: string, label?: string) => {
-    await copyToClipboard(text);
-    resetAfterCopy(label ?? "Copied to clipboard");
-  }, [resetAfterCopy]);
+  const copy = useCallback(
+    async (text: string, label?: string) => {
+      await copyToClipboard(text);
+      resetAfterCopy(label ?? "Copied to clipboard");
+    },
+    [resetAfterCopy],
+  );
 
-  const copyFormatted = useCallback(async (html: string, plainText: string) => {
-    await copyFormattedToClipboard(html, plainText);
-    resetAfterCopy("Formatted content copied");
-  }, [resetAfterCopy]);
+  const copyFormatted = useCallback(
+    async (html: string, plainText: string) => {
+      await copyFormattedToClipboard(html, plainText);
+      resetAfterCopy("Formatted content copied");
+    },
+    [resetAfterCopy],
+  );
 
   return { copied, copy, copyFormatted };
 }

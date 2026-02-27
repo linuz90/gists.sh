@@ -30,7 +30,7 @@ export function FileTabs({
       const query = params.toString();
       router.push(`/${user}/${gistId}${query ? `?${query}` : ""}`);
     },
-    [router, searchParams, filenames, user, gistId]
+    [router, searchParams, filenames, user, gistId],
   );
 
   if (filenames.length <= 1) return null;

@@ -2,7 +2,7 @@ import { codeToHtml } from "shiki";
 
 export async function highlightCode(
   code: string,
-  lang: string
+  lang: string,
 ): Promise<string> {
   try {
     return await codeToHtml(code, {

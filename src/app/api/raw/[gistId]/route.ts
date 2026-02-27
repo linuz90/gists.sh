@@ -1,9 +1,9 @@
-import { NextRequest, NextResponse } from "next/server";
 import { fetchGist, getMimeType, isValidGistId } from "@/lib/github";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ gistId: string }> }
+  { params }: { params: Promise<{ gistId: string }> },
 ) {
   const { gistId } = await params;
 
@@ -40,11 +40,16 @@ export async function GET(
       },
     });
   } catch (error) {
-    const message =
-      error instanceof Error ? error.message : "";
+    const message = error instanceof Error ? error.message : "";
     if (message.includes("rate limit")) {
-      return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
+      return NextResponse.json(
+        { error: "Rate limit exceeded" },
+        { status: 429 },
+      );
     }
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 },
+    );
   }
 }

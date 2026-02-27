@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState, useCallback, useRef } from "react";
-import { List, X } from "lucide-react";
 import type { TocEntry } from "@/lib/toc";
+import { List, X } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 interface TableOfContentsProps {
   headings: TocEntry[];
@@ -31,7 +31,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
           }
         }
       },
-      { rootMargin: "-10% 0px -80% 0px" }
+      { rootMargin: "-10% 0px -80% 0px" },
     );
 
     for (const el of elements) {
@@ -68,10 +68,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
     <div className="fixed bottom-[calc(1.5rem+env(safe-area-inset-bottom))] right-6 z-40">
       {open && (
         <>
-          <div
-            className="fixed inset-0 z-40"
-            onClick={() => setOpen(false)}
-          />
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
           <div className="absolute bottom-14 right-0 z-50 w-64 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-1 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_1px_4px_-1px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.4),0_1px_4px_-1px_rgba(0,0,0,0.2)] animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-2 duration-150">
             <div className="px-2.5 py-1.5 text-[0.65rem] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
               On this page
@@ -93,9 +90,10 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
                     className={`
                       flex items-center gap-2.5 w-full text-left px-2.5 py-1.5 text-[0.8125rem] rounded-md outline-none cursor-default select-none transition-colors
                       ${h.level === 3 ? "pl-5" : ""}
-                      ${activeId === h.id
-                        ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
-                        : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-neutral-100"
+                      ${
+                        activeId === h.id
+                          ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-100"
+                          : "text-neutral-500 dark:text-neutral-400 hover:bg-neutral-50 dark:hover:bg-neutral-800/50 hover:text-neutral-900 dark:hover:text-neutral-100"
                       }
                     `}
                   >

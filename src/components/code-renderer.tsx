@@ -1,5 +1,5 @@
-import { highlightCode } from "@/lib/shiki";
 import { getFileExtension } from "@/lib/github";
+import { highlightCode } from "@/lib/shiki";
 
 interface CodeRendererProps {
   content: string;

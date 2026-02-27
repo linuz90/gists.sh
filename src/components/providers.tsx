@@ -1,9 +1,9 @@
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 import { ThemeProvider, useTheme } from "next-themes";
 import { useSearchParams } from "next/navigation";
-import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { Suspense, useEffect } from "react";
 import { Toaster } from "sonner";
 
 function ThemeParamSync() {

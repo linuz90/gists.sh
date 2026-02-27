@@ -15,7 +15,7 @@ export async function copyToClipboard(text: string): Promise<void> {
 
 export async function copyFormattedToClipboard(
   html: string,
-  plainText: string
+  plainText: string,
 ): Promise<void> {
   if (typeof ClipboardItem !== "undefined") {
     const htmlBlob = new Blob([html], { type: "text/html" });
