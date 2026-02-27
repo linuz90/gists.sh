@@ -1,3 +1,4 @@
+import { BeforeAfter } from "@/components/before-after";
 import { ParamConfigurator } from "@/components/param-configurator";
 import { Analytics } from "@vercel/analytics/next";
 import { ArrowRight } from "lucide-react";
@@ -6,8 +7,8 @@ export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (
-    <main className="min-h-screen flex items-start sm:items-center justify-center px-5 sm:px-6 lg:px-8 py-12 sm:py-24">
-      <div className="max-w-2xl w-full space-y-12 sm:space-y-16">
+    <main className="min-h-screen flex items-start sm:items-center justify-center px-5 sm:px-6 lg:px-8 py-12 sm:py-24 overflow-x-hidden">
+      <div className="max-w-2xl w-full space-y-12 sm:space-y-14">
         {/* Header */}
         <div className="space-y-4">
           <h1 className="text-2xl font-semibold tracking-tight flex items-center gap-2.5">
@@ -72,6 +73,8 @@ export default function Home() {
             </span>
           </div>
         </div>
+
+        <BeforeAfter />
 
         <ParamConfigurator />
 

@@ -30,7 +30,7 @@ export function CopyButton({
       ) : copied ? (
         <Check size={16} className="text-green-600 dark:text-green-400" />
       ) : (
-        <Clipboard size={16} />
+        <Clipboard size={16} className="opacity-60" />
       )}
     </button>
   );
