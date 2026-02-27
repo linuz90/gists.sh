@@ -42,6 +42,22 @@ const PARAM_DOCS = [
   { param: "mono", desc: "Monospace font for all text" },
 ];
 
+function CopiableBlock({ text, className }: { text: string; className?: string }) {
+  return (
+    <div className="relative group">
+      <div className={`font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 pr-12 text-neutral-700 dark:text-neutral-300 ${className ?? ""}`}>
+        {text}
+      </div>
+      <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity">
+        <CopyButton
+          text={text}
+          className="p-1 rounded cursor-pointer text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-400 transition-colors"
+        />
+      </div>
+    </div>
+  );
+}
+
 export function ParamConfigurator() {
   const [theme, setTheme] = useState<Theme>("auto");
   const [noheader, setNoheader] = useState(false);
@@ -190,9 +206,7 @@ export function ParamConfigurator() {
           Install the skill and every gist your AI agent creates automatically
           gets a clean gists.sh link.
         </p>
-        <div className="font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 text-neutral-700 dark:text-neutral-300 overflow-x-auto">
-          npx skills add linuz90/gists.sh
-        </div>
+        <CopiableBlock text="npx skills add linuz90/gists.sh" className="overflow-x-auto" />
       </div>
 
       {/* Or just prompt it */}
@@ -205,14 +219,7 @@ export function ParamConfigurator() {
           (OpenClaw 🦞, Claude Code, Cursor, etc.) and it will use gists.sh
           automatically.
         </p>
-        <div className="relative group">
-          <div className="font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 pr-12 text-neutral-700 dark:text-neutral-300 leading-relaxed break-words">
-            {promptText}
-          </div>
-          <div className="absolute top-2.5 right-2.5">
-            <CopyButton text={promptText} />
-          </div>
-        </div>
+        <CopiableBlock text={promptText} className="leading-relaxed break-words" />
       </div>
     </>
   );
