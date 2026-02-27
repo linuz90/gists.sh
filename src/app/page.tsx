@@ -96,18 +96,14 @@ export default function Home() {
             <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
               gists.sh is fully open source. Gist pages have zero tracking or analytics. The only analytics run on this landing page via Vercel to count visitors. Your gists are fetched directly from the GitHub API and never stored. Secret gists are marked as noindex so search engines won&apos;t crawl them.
             </p>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              Don&apos;t take my word for it.{" "}
-              <a
-                href="https://github.com/linuz90/gists.sh"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-neutral-700 dark:text-neutral-300 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors underline underline-offset-2 decoration-neutral-400 dark:decoration-neutral-700"
-              >
-                Read the source
-              </a>
-              .
-            </p>
+            <a
+              href="https://github.com/linuz90/gists.sh"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 font-mono text-xs px-3 py-1.5 rounded-md bg-neutral-100 dark:bg-neutral-900 text-neutral-600 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+            >
+              View source
+            </a>
           </div>
         </div>
       </div>
