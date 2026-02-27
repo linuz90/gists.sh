@@ -4,7 +4,27 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Pre-set outline-color so Tailwind transition-colors never flashes */
+* {
+  outline-color: color-mix(in srgb, currentColor 25%, transparent);
+}
+
 *:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+*:focus-visible {
+  outline-width: 2px;
+  outline-style: solid;
+  outline-offset: 2px;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+/* Dropdown/popover items already have their own highlight styling */
+[role="menu"] *:focus-visible,
+[data-radix-popper-content-wrapper] *:focus-visible {
   outline: none;
 }
 
@@ -231,6 +251,11 @@ summary {
   border-bottom-color: #d4d4d4;
 }
 
+/* Hide last-row border when table is directly followed by an hr */
+.markdown-body table:has(+ hr) tr:last-child td {
+  border-bottom: none;
+}
+
 /* Strong & emphasis */
 .markdown-body strong {
   font-weight: 600;
@@ -337,6 +362,7 @@ pre.shiki {
 
 pre code {
   font-family: var(--font-mono);
+  font-size: inherit;
 }
 
 /* ── Tooltips ──────────────────────────────────────────────────── */

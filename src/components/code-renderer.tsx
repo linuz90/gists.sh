@@ -62,7 +62,7 @@ export async function CodeRenderer({
 
   return (
     <div
-      className="text-sm leading-relaxed [&_pre]:rounded-lg [&_pre]:p-5 [&_pre]:overflow-x-auto"
+      className="text-[13px] leading-relaxed [&_pre]:rounded-lg [&_pre]:p-5 [&_pre]:overflow-x-auto"
       dangerouslySetInnerHTML={{ __html: html }}
     />
   );

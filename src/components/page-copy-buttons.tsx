@@ -1,7 +1,7 @@
 "use client";
 
+import { DropdownMenu } from "@/components/ui/dropdown-menu";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
-import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import {
   Check,
   Clipboard,
@@ -76,8 +76,10 @@ export function PageCopyButtons({
     try {
       const res = await fetch(`/${user}/${gistId}/refresh`, { method: "POST" });
       if (res.ok) {
-        toast.success("Gist refreshed", { id: toastId });
+        // Brief delay so the revalidated content is available before Next.js refetches
+        await new Promise((r) => setTimeout(r, 1000));
         router.refresh();
+        toast.success("Gist refreshed", { id: toastId });
       } else if (res.status === 429) {
         toast.error("Please wait a few minutes before refreshing again", {
           id: toastId,
@@ -138,11 +140,11 @@ export function PageCopyButtons({
   const triggerClass =
     "p-1.5 rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors outline-none";
 
-  const itemClass =
-    "flex items-center gap-2.5 px-2.5 py-1.5 text-[0.8125rem] rounded-md outline-none cursor-default select-none text-neutral-200 dark:text-neutral-700 data-[highlighted]:bg-white/10 dark:data-[highlighted]:bg-black/10 data-[highlighted]:text-white dark:data-[highlighted]:text-neutral-900";
+  const shortcutClass =
+    "text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4";
 
   return (
-    <div className="flex items-center ml-3 shrink-0">
+    <div className="flex items-center ml-3 -mt-1 -mr-1 shrink-0">
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <button
@@ -151,74 +153,46 @@ export function PageCopyButtons({
             suppressHydrationWarning
           >
             {copied ? (
-              <Check size={16} className="text-green-600 dark:text-green-400" />
+              <Check size={15} className="text-green-600 dark:text-green-400" />
             ) : (
-              <Clipboard size={16} className="opacity-60" />
+              <Clipboard size={15} className="opacity-60" />
             )}
           </button>
         </DropdownMenu.Trigger>
-        <DropdownMenu.Portal>
-          <DropdownMenu.Content
-            side="bottom"
-            align="end"
-            sideOffset={6}
-            className="z-50 min-w-[160px] rounded-xl bg-neutral-900 dark:bg-neutral-200 p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2"
-          >
-            <DropdownMenu.Item className={itemClass} onSelect={handleCopyRaw}>
-              <Clipboard size={14} />
-              <span className="flex-1">Copy raw</span>
-              <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">
-                C
-              </span>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item
-              className={itemClass}
-              onSelect={handleCopyFormatted}
-            >
-              <ClipboardPaste size={14} />
-              <span className="flex-1">Copy formatted</span>
-              <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">
-                F
-              </span>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item className={itemClass} onSelect={handleCopyLink}>
-              <Link size={14} />
-              <span className="flex-1">Copy link</span>
-              <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">
-                L
-              </span>
-            </DropdownMenu.Item>
-            <DropdownMenu.Item
-              className={itemClass}
-              onSelect={handleCopyOriginalUrl}
-            >
-              <Link size={14} />
-              <span className="flex-1">Copy original URL</span>
-              <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">
-                G
-              </span>
-            </DropdownMenu.Item>
-            <DropdownMenu.Separator className="h-px my-1 mx-1.5 bg-white/10 dark:bg-black/10" />
-            <DropdownMenu.Item
-              className={itemClass}
-              onSelect={handleOpenOriginal}
-            >
-              <ExternalLink size={14} />
-              <span className="flex-1">Open on GitHub</span>
-              <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">
-                O
-              </span>
-            </DropdownMenu.Item>
-            <DropdownMenu.Separator className="h-px my-1 mx-1.5 bg-white/10 dark:bg-black/10" />
-            <DropdownMenu.Item className={itemClass} onSelect={handleRefresh}>
-              <RotateCw size={14} />
-              <span className="flex-1">Refresh gist</span>
-              <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">
-                R
-              </span>
-            </DropdownMenu.Item>
-          </DropdownMenu.Content>
-        </DropdownMenu.Portal>
+        <DropdownMenu.Content side="bottom" align="end">
+          <DropdownMenu.Item onSelect={handleCopyRaw}>
+            <Clipboard size={14} />
+            <span className="flex-1">Copy raw</span>
+            <span className={shortcutClass}>C</span>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item onSelect={handleCopyFormatted}>
+            <ClipboardPaste size={14} />
+            <span className="flex-1">Copy formatted</span>
+            <span className={shortcutClass}>F</span>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item onSelect={handleCopyLink}>
+            <Link size={14} />
+            <span className="flex-1">Copy link</span>
+            <span className={shortcutClass}>L</span>
+          </DropdownMenu.Item>
+          <DropdownMenu.Item onSelect={handleCopyOriginalUrl}>
+            <Link size={14} />
+            <span className="flex-1">Copy original URL</span>
+            <span className={shortcutClass}>G</span>
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item onSelect={handleOpenOriginal}>
+            <ExternalLink size={14} />
+            <span className="flex-1">Open on GitHub</span>
+            <span className={shortcutClass}>O</span>
+          </DropdownMenu.Item>
+          <DropdownMenu.Separator />
+          <DropdownMenu.Item onSelect={handleRefresh}>
+            <RotateCw size={14} />
+            <span className="flex-1">Refresh gist</span>
+            <span className={shortcutClass}>R</span>
+          </DropdownMenu.Item>
+        </DropdownMenu.Content>
       </DropdownMenu.Root>
     </div>
   );

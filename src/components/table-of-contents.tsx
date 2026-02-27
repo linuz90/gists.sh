@@ -73,7 +73,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
               className="fixed inset-0 z-40"
               onClick={() => setOpen(false)}
             />
-            <div className="absolute bottom-14 right-0 z-50 w-64 rounded-xl bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-1 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_1px_4px_-1px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.4),0_1px_4px_-1px_rgba(0,0,0,0.2)] animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-2 duration-150">
+            <div className="absolute bottom-14 right-0 z-50 w-64 rounded-xl overflow-hidden bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-1 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_1px_4px_-1px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.4),0_1px_4px_-1px_rgba(0,0,0,0.2)] animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-2 duration-150">
               <div className="px-2.5 py-1.5 text-[0.65rem] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
                 On this page
               </div>
