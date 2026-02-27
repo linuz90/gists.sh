@@ -403,10 +403,25 @@ pre code {
   border: none;
   color: #a3a3a3;
   cursor: pointer;
-  opacity: 0;
+  opacity: 0.7;
   transition: opacity 0.15s ease, color 0.15s ease;
   line-height: 0;
   z-index: 10;
+  /* Smaller on touch devices where it's always visible */
+  scale: 0.85;
+}
+
+/* Hide by default and show on hover only for devices that support it */
+@media (hover: hover) and (pointer: fine) {
+  .code-copy-btn {
+    opacity: 0;
+    scale: 1;
+  }
+
+  .code-block-wrapper:hover > .code-copy-btn,
+  .code-copy-btn:focus {
+    opacity: 1;
+  }
 }
 
 .code-copy-btn:hover {
@@ -415,15 +430,11 @@ pre code {
 
 .code-copy-btn--copied {
   color: #16a34a;
+  opacity: 1;
 }
 
 .code-copy-btn--copied:hover {
   color: #16a34a;
-}
-
-.code-block-wrapper:hover > .code-copy-btn,
-.code-copy-btn:focus {
-  opacity: 1;
 }
 
 .dark .code-copy-btn {

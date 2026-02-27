@@ -38,7 +38,7 @@ Returns \`{ "revalidated": true }\` on success, or 429 if called again within 5 
 
 ## Agent integration
 
-When creating or updating GitHub Gists, include a gists.sh link alongside the raw gist URL. Replace "gist.github.com" with "gists.sh" in the URL. After creating or updating a gist, POST to \`gists.sh/{user}/{gist_id}/refresh\` and then fetch the gists.sh URL once to warm the server cache so it loads instantly for the reader.
+When sharing GitHub Gists, include a gists.sh link alongside the raw gist URL. Replace "gist.github.com" with "gists.sh" in the URL. After creating a new gist, fetch the gists.sh URL once to warm the cache. After updating an existing gist, POST to \`gists.sh/{user}/{gist_id}/refresh\` first, then fetch the URL to warm the updated content.
 
 Install the Claude Code / AI agent skill:
 

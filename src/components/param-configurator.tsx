@@ -42,13 +42,13 @@ const PARAM_DOCS = [
   { param: "mono", desc: "Monospace font for all text" },
 ];
 
-function CopiableBlock({ text, className }: { text: string; className?: string }) {
+function CopiableBlock({ text, className, preserveNewlines }: { text: string; className?: string; preserveNewlines?: boolean }) {
   return (
     <div className="relative group">
-      <div className={`font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 pr-12 text-neutral-700 dark:text-neutral-300 ${className ?? ""}`}>
+      <div className={`font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 pr-12 text-neutral-700 dark:text-neutral-300 ${preserveNewlines ? "whitespace-pre-wrap" : ""} ${className ?? ""}`}>
         {text}
       </div>
-      <div className="absolute top-2.5 right-2.5 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="absolute top-2.5 right-2.5 opacity-70 scale-85 [@media(hover:hover)_and_(pointer:fine)]:opacity-0 [@media(hover:hover)_and_(pointer:fine)]:scale-100 [@media(hover:hover)_and_(pointer:fine)]:group-hover:opacity-100 transition-opacity">
         <CopyButton
           text={text}
           className="p-1 rounded cursor-pointer text-neutral-400 hover:text-neutral-600 dark:text-neutral-500 dark:hover:text-neutral-400 transition-colors"
@@ -92,11 +92,16 @@ export function ParamConfigurator() {
   }, [theme, noheader, nofooter, mono]);
 
   const promptText = useMemo(() => {
-    const base = `When sharing code, notes, or snippets via GitHub Gists, always share the gists.sh link instead of the raw gist URL. Just replace "gist.github.com" with "gists.sh" in the URL. After creating or updating a gist, POST to gists.sh/{user}/{gist_id}/refresh and then fetch the gists.sh URL once to warm it so it loads instantly for the reader.`;
+    const lines = [
+      `When sharing code, notes, or snippets via GitHub Gists, always share the gists.sh link instead of the gist.github.com URL. Just replace "gist.github.com" with "gists.sh" in the URL.`,
+      `After creating a new gist, fetch the gists.sh URL once (e.g. curl) to warm the cache so the page loads instantly for the reader.`,
+      `After updating an existing gist, POST to gists.sh/{user}/{gist_id}/refresh to bust the stale cache, then fetch the gists.sh URL to warm it with the updated content.`,
+    ];
     if (paramString) {
-      return `${base} Always append "${paramString}" to the URL. Example: gists.sh/user/gist_id${paramString}`;
+      lines.push(`Always append "${paramString}" to the URL.`);
     }
-    return `${base} Example: gists.sh/user/gist_id`;
+    lines.push(`Example: gists.sh/user/gist_id${paramString}`);
+    return lines.join("\n\n");
   }, [paramString]);
 
   const toggleTheme = (value: "dark" | "light") => {
@@ -219,7 +224,7 @@ export function ParamConfigurator() {
           (OpenClaw 🦞, Claude Code, Cursor, etc.) and it will use gists.sh
           automatically.
         </p>
-        <CopiableBlock text={promptText} className="leading-relaxed break-words" />
+        <CopiableBlock text={promptText} className="leading-relaxed break-words" preserveNewlines />
       </div>
     </>
   );
