@@ -101,7 +101,7 @@ export default async function GistPage({ params, searchParams }: PageProps) {
               )}
             </div>
 
-            <PageCopyButtons content={activeFile.content} originalUrl={gist.html_url} />
+            <PageCopyButtons content={activeFile.content} originalUrl={gist.html_url} user={user} gistId={gistId} />
           </header>
         )}
 

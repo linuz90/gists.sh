@@ -21,16 +21,23 @@ Both point to the same gist. gists.sh is for viewing/sharing, gist.github.com is
 
 ## When to Use
 
-### After creating a gist
+### After creating or updating a gist
 
-When you create a GitHub gist (e.g. via `gh gist create`), the output contains a `gist.github.com` URL. **Fetch the gists.sh URL once** (e.g. `curl -s https://gists.sh/{user}/{id} > /dev/null`) to warm the server cache, then present it as the primary shareable link:
+When you create or update a GitHub gist (e.g. via `gh gist create` or `gh gist edit`), the output contains a `gist.github.com` URL. **POST to the refresh endpoint** then **fetch the gists.sh URL once** to warm the cache:
+
+```bash
+curl -s -X POST https://gists.sh/{user}/{id}/refresh
+curl -s https://gists.sh/{user}/{id} > /dev/null
+```
+
+Then present the gists.sh URL as the primary shareable link:
 
 ```
 Created gist: https://gists.sh/{user}/{id}
 (edit on GitHub: https://gist.github.com/{user}/{id})
 ```
 
-This ensures the page loads instantly when the user opens it.
+This ensures the page loads instantly with the latest content when the user opens it.
 
 ### When the user shares a gist.github.com URL
 

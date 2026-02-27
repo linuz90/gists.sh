@@ -1,17 +1,23 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { Clipboard, ClipboardPaste, Check, Link, ExternalLink } from "lucide-react";
+import { Clipboard, ClipboardPaste, Check, Link, ExternalLink, RotateCw } from "lucide-react";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
+import { toast } from "sonner";
 
 interface PageCopyButtonsProps {
   content: string;
   originalUrl: string;
+  user: string;
+  gistId: string;
 }
 
-export function PageCopyButtons({ content, originalUrl }: PageCopyButtonsProps) {
+export function PageCopyButtons({ content, originalUrl, user, gistId }: PageCopyButtonsProps) {
   const { copied, copy, copyFormatted } = useCopyToClipboard();
+  const router = useRouter();
+  const refreshingRef = useRef(false);
 
   const handleCopyRaw = useCallback(() => {
     copy(content, "Raw content copied");
@@ -50,6 +56,28 @@ export function PageCopyButtons({ content, originalUrl }: PageCopyButtonsProps) 
     window.open(originalUrl, "_blank", "noopener,noreferrer");
   }, [originalUrl]);
 
+  const handleRefresh = useCallback(async () => {
+    if (refreshingRef.current) return;
+    refreshingRef.current = true;
+
+    const toastId = toast.loading("Refreshing gist...");
+    try {
+      const res = await fetch(`/${user}/${gistId}/refresh`, { method: "POST" });
+      if (res.ok) {
+        toast.success("Gist refreshed", { id: toastId });
+        router.refresh();
+      } else if (res.status === 429) {
+        toast.error("Please wait a few minutes before refreshing again", { id: toastId });
+      } else {
+        toast.error("Failed to refresh gist", { id: toastId });
+      }
+    } catch {
+      toast.error("Failed to refresh gist", { id: toastId });
+    } finally {
+      refreshingRef.current = false;
+    }
+  }, [user, gistId, router]);
+
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       // Skip if any modifier key is held
@@ -76,12 +104,15 @@ export function PageCopyButtons({ content, originalUrl }: PageCopyButtonsProps) 
         case "o":
           handleOpenOriginal();
           break;
+        case "r":
+          handleRefresh();
+          break;
       }
     }
 
     document.addEventListener("keydown", onKeyDown);
     return () => document.removeEventListener("keydown", onKeyDown);
-  }, [handleCopyRaw, handleCopyFormatted, handleCopyLink, handleCopyOriginalUrl, handleOpenOriginal]);
+  }, [handleCopyRaw, handleCopyFormatted, handleCopyLink, handleCopyOriginalUrl, handleOpenOriginal, handleRefresh]);
 
   const triggerClass =
     "p-1.5 rounded-md text-neutral-500 dark:text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors outline-none";
@@ -137,6 +168,12 @@ export function PageCopyButtons({ content, originalUrl }: PageCopyButtonsProps) 
               <ExternalLink size={14} />
               <span className="flex-1">Open on GitHub</span>
               <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">O</span>
+            </DropdownMenu.Item>
+            <DropdownMenu.Separator className="h-px my-1 mx-1.5 bg-white/10 dark:bg-black/10" />
+            <DropdownMenu.Item className={itemClass} onSelect={handleRefresh}>
+              <RotateCw size={14} />
+              <span className="flex-1">Refresh gist</span>
+              <span className="text-[0.6875rem] text-neutral-500 dark:text-neutral-400 ml-4">R</span>
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>

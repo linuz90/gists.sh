@@ -88,7 +88,8 @@ export async function fetchGist(gistId: string): Promise<Gist | null> {
   const start = performance.now();
   const res = await fetch(`https://api.github.com/gists/${gistId}`, {
     headers,
-    next: { revalidate: 3600 },
+    // Tag enables on-demand purge via POST /{user}/{gistId}/refresh
+    next: { revalidate: 86400, tags: [`gist-${gistId}`] },
   });
   console.log(`[PERF] fetchGist(${gistId}): ${(performance.now() - start).toFixed(0)}ms (status: ${res.status})`);
 

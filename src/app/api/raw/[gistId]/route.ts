@@ -36,7 +36,7 @@ export async function GET(
         "Content-Type": `${contentType}; charset=utf-8`,
         "Content-Security-Policy": "default-src 'none'",
         "X-Content-Type-Options": "nosniff",
-        "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
+        "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=86400",
       },
     });
   } catch (error) {
