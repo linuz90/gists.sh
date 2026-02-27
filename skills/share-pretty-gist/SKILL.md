@@ -32,6 +32,10 @@ Infer from context what the user wants to share. Use good judgment on structure:
 
 For multi-file gists, put the most important file first (it displays by default as the first tab on gists.sh).
 
+If it's obvious from the context that there's some specific text or markdown content to share, put it in the gist with no changed or only minor formatting ones as needed.
+
+NEVER put meta-commentary in the gist content, like "This is what {user name} asked me to share...".
+
 ### Step 2: Create the gist
 
 ```bash
@@ -40,9 +44,11 @@ gh gist create <files> -d "Clear description of what this contains"
 
 The `-d` description becomes the title on gists.sh, so make it descriptive and useful.
 
+If `gh` is not available or authenticated, guide the user through the installation and setup.
+
 ### Step 3: Warm the cache
 
-After creating the gist, fetch the gists.sh page once so it loads instantly for the reader:
+After creating the gist, fetch the gists.sh page once to warm up the cache, so it loads instantly for the reader:
 
 ```bash
 curl -s https://gists.sh/{user}/{id} > /dev/null
@@ -53,25 +59,26 @@ curl -s https://gists.sh/{user}/{id} > /dev/null
 Show gists.sh as the primary shareable link:
 
 ```
-Here's the link: https://gists.sh/{user}/{id}
-(edit on GitHub: https://gist.github.com/{user}/{id})
+-> https://gists.sh/{user}/{id}
+
+(original on GitHub: https://gist.github.com/{user}/{id})
 ```
 
 ## Rules
 
-- **ALWAYS create SECRET gists.** Even when asked to "share with someone" or "share externally", the gist must be secret. Only use `--public` if the user explicitly asks for a public gist.
-- **Always include `-d`** with a clear, descriptive title. This is the first thing readers see on gists.sh.
-- **Use correct filenames with proper extensions** (e.g. `server.ts`, `config.yml`, `Dockerfile`) so syntax highlighting works via Shiki.
+- **ALWAYS create SECRET gists.** Even when asked to "share with someone" or "share externally", the gist must be secret. Only use `--public` if the user EXPLICITLY asks for a public gist.
+- **Always include `-d`** with a clear, concise, but descriptive title. This is the first thing readers see on gists.sh.
+- **Use correct filenames with proper extensions** (e.g. `server.ts`, `config.yml`, `Dockerfile`) so syntax highlighting works correctly.
 - **Always warm the cache** after creating or updating a gist.
-- **No em dashes** in any content. Use commas or periods instead.
+- Try to avoid using **em dashes** in any content, unless they're already in the original content to share.
 - **No meta-commentary** ("The user asked me to...", "Here is a summary of..."). Get straight to the content.
 - **Write for the reader**, not the creator. The person opening the link should understand the content without needing the original conversation context.
 
 ## gists.sh Rendering Tips
 
-- Use language tags on all code blocks (` ```typescript `, ` ```yaml `, etc.) for proper syntax highlighting.
-- GFM alerts render nicely: `> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]`.
-- No raw HTML. Stick to standard GitHub Flavored Markdown.
+- Try to use language tags on all code blocks (` ```typescript `, ` ```yaml `, etc.) for proper syntax highlighting.
+- GFM alerts also can be used because they render nicely: `> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]`.
+- Avid raw HTML unless strictly necessary. Stick to standard GitHub Flavored Markdown.
 - Multi-file gists render as tabs on gists.sh. The first file is shown by default.
 - Tables, task lists, and other GFM features all work.
 

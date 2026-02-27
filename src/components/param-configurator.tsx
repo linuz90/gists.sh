@@ -54,7 +54,7 @@ function CopiableBlock({
   return (
     <div className="relative group">
       <div
-        className={`font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 pr-12 text-neutral-700 dark:text-neutral-300 ${preserveNewlines ? "whitespace-pre-wrap" : ""} ${className ?? ""}`}
+        className={`font-mono text-[13px] bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 pr-12 text-neutral-700 dark:text-neutral-300 ${preserveNewlines ? "whitespace-pre-wrap" : ""} ${className ?? ""}`}
       >
         {text}
       </div>
@@ -73,16 +73,16 @@ export function ParamConfigurator() {
   const [noheader, setNoheader] = useState(false);
   const [nofooter, setNofooter] = useState(false);
   const [mono, setMono] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
 
-  // Load from localStorage on mount
+  // Load from localStorage on mount (SSR requires effect-based hydration)
   useEffect(() => {
     const saved = loadState();
+    /* eslint-disable react-hooks/set-state-in-effect */
     setTheme(saved.theme);
     setNoheader(saved.noheader);
     setNofooter(saved.nofooter);
     setMono(saved.mono);
-    setHydrated(true);
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
 
   // Persist to localStorage on change
@@ -187,7 +187,7 @@ export function ParamConfigurator() {
           </button>
         </div>
         <Link
-          href={`/linuz90/c77fd6ba8ca775f9b64bb7ae085537a4${paramString}`}
+          href={`/linuz90/146300208a53384d3aff494d5fcac234${paramString}`}
           target="_blank"
           className="block font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 hover:bg-neutral-200/70 dark:hover:bg-neutral-800 transition-colors space-y-2 overflow-hidden"
         >
@@ -195,7 +195,7 @@ export function ParamConfigurator() {
             <span className="line-through decoration-neutral-400 dark:decoration-neutral-700">
               gist.github.com
             </span>
-            /linuz90/c77fd6ba8ca775f9b64bb7ae085537a4
+            /linuz90/146300208a53384d3aff494d5fcac234
           </div>
           <div className="flex items-start gap-2">
             <ArrowRight
@@ -208,7 +208,7 @@ export function ParamConfigurator() {
                 gists.sh
               </span>
               <span className="text-neutral-500 dark:text-neutral-600">
-                /linuz90/c77fd6ba8ca775f9b64bb7ae085537a4
+                /linuz90/146300208a53384d3aff494d5fcac234
                 {paramString && (
                   <span className="text-blue-500">{paramString}</span>
                 )}
@@ -237,8 +237,12 @@ export function ParamConfigurator() {
           Agent skill
         </h2>
         <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-          Install the skill and every gist your AI agent creates automatically
-          gets a clean gists.sh link.
+          Install our{" "}
+          <code className="font-mono text-neutral-700 dark:text-neutral-300">
+            share-pretty-gist
+          </code>{" "}
+          skill to teach your AI agents to share beautiful gists whenever you
+          need to share notes, code, reports, or anything else.
         </p>
         <CopiableBlock
           text="npx skills add linuz90/gists.sh"
