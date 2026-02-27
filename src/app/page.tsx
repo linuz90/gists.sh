@@ -1,5 +1,6 @@
 import { ArrowRight } from "lucide-react";
 import { ParamConfigurator } from "@/components/param-configurator";
+import { Analytics } from "@vercel/analytics/next";
 
 export const dynamic = "force-dynamic";
 
@@ -93,7 +94,7 @@ export default function Home() {
           </h2>
           <div className="space-y-4">
             <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
-              gists.sh is fully open source. No tracking, no analytics, no data collection. Your gists are fetched directly from the GitHub API and never stored. Secret gists are marked as noindex so search engines won&apos;t crawl them.
+              gists.sh is fully open source. Gist pages have zero tracking or analytics. The only analytics run on this landing page via Vercel to count visitors. Your gists are fetched directly from the GitHub API and never stored. Secret gists are marked as noindex so search engines won&apos;t crawl them.
             </p>
             <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
               Don&apos;t take my word for it.{" "}
@@ -110,6 +111,7 @@ export default function Home() {
           </div>
         </div>
       </div>
+      <Analytics />
     </main>
   );
 }

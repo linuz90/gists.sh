@@ -13,6 +13,7 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@shikijs/rehype": "^3.23.0",
     "@types/hast": "^3.0.4",
+    "@vercel/analytics": "^1.6.1",
     "geist": "^1.7.0",
     "hast-util-heading-rank": "^3.0.0",
     "hast-util-to-string": "^3.0.1",
