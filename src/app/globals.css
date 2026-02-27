@@ -51,6 +51,8 @@ summary {
   color: #1a1a1a;
   line-height: 1.75;
   font-size: var(--md-prose-size);
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 .markdown-body > *:first-child {
