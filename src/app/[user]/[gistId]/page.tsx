@@ -25,8 +25,10 @@ interface PageProps {
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
+  const metaStart = performance.now();
   const { user, gistId } = await params;
   const gist = await fetchGist(gistId);
+  console.log(`[PERF] generateMetadata: ${(performance.now() - metaStart).toFixed(0)}ms`);
 
   if (!gist) {
     return { title: "Not Found · gists.sh" };
@@ -51,16 +53,20 @@ export async function generateMetadata({
 }
 
 export default async function GistPage({ params, searchParams }: PageProps) {
+  const pageStart = performance.now();
   const { user, gistId } = await params;
   const resolvedSearchParams = await searchParams;
   const { file: fileParam } = resolvedSearchParams;
   const hideHeader = resolvedSearchParams.noheader !== undefined;
   const hideFooter = resolvedSearchParams.nofooter !== undefined;
   const monoMode = resolvedSearchParams.mono !== undefined;
+  const fetchStart = performance.now();
   const [gist, githubUser] = await Promise.all([
     fetchGist(gistId),
     fetchUser(user),
   ]);
+  const fetchEnd = performance.now();
+  console.log(`[PERF] Fetch gist+user: ${(fetchEnd - fetchStart).toFixed(0)}ms`);
 
   if (!gist) {
     notFound();
@@ -76,7 +82,8 @@ export default async function GistPage({ params, searchParams }: PageProps) {
 
   const activeFilename = activeFile.filename;
 
-  return (
+  const renderStart = performance.now();
+  const jsx = (
     <main className="min-h-screen">
       <HashScroller />
       <div className={`max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12${monoMode ? " font-mono" : ""}`}>
@@ -112,17 +119,19 @@ export default async function GistPage({ params, searchParams }: PageProps) {
 
         {/* Content */}
         <CodeBlockEnhancer>
-          <div id="gist-content" className={!hideHeader && filenames.length > 1 ? "mt-8" : ""}>
+          <div id="gist-content" className={`min-h-[70vh]${!hideHeader && filenames.length > 1 ? " mt-8" : ""}`}>
             {isMarkdown(activeFilename) ? (
               <Suspense>
                 <MarkdownRenderer content={activeFile.content} />
               </Suspense>
             ) : (
-              <CodeRenderer
-                content={activeFile.content}
-                filename={activeFilename}
-                language={activeFile.language}
-              />
+              <Suspense fallback={<div className="animate-pulse h-64 bg-neutral-100 dark:bg-neutral-900 rounded" />}>
+                <CodeRenderer
+                  content={activeFile.content}
+                  filename={activeFilename}
+                  language={activeFile.language}
+                />
+              </Suspense>
             )}
           </div>
         </CodeBlockEnhancer>
@@ -154,4 +163,8 @@ export default async function GistPage({ params, searchParams }: PageProps) {
       </div>
     </main>
   );
+  const renderEnd = performance.now();
+  console.log(`[PERF] JSX construction: ${(renderEnd - renderStart).toFixed(0)}ms`);
+  console.log(`[PERF] Total page component: ${(renderEnd - pageStart).toFixed(0)}ms`);
+  return jsx;
 }
