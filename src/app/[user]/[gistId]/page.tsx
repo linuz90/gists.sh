@@ -1,15 +1,23 @@
-import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import { fetchGist, fetchUser, isMarkdown } from "@/lib/github";
-import { MarkdownRenderer } from "@/components/markdown-renderer";
+import { AuthorFooter } from "@/components/author-footer";
+import { CodeBlockEnhancer } from "@/components/code-block-enhancer";
 import { CodeRenderer } from "@/components/code-renderer";
 import { FileTabs } from "@/components/file-tabs";
-import { AuthorFooter } from "@/components/author-footer";
-import { PageCopyButtons } from "@/components/page-copy-buttons";
-import { CodeBlockEnhancer } from "@/components/code-block-enhancer";
 import { HashScroller } from "@/components/hash-scroller";
-import Link from "next/link";
+import { MarkdownRenderer } from "@/components/markdown-renderer";
+import { PageCopyButtons } from "@/components/page-copy-buttons";
+import { fetchGist, fetchUser, isMarkdown } from "@/lib/github";
 import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
+
+function ContentLoader() {
+  return (
+    <div className="flex-1 flex items-start justify-center pt-24">
+      <div className="h-4 w-4 border-[1.5px] border-neutral-200 border-t-neutral-400 dark:border-neutral-700 dark:border-t-neutral-500 rounded-full animate-spin" />
+    </div>
+  );
+}
 
 interface PageProps {
   params: Promise<{ user: string; gistId: string }>;
@@ -28,7 +36,9 @@ export async function generateMetadata({
   const metaStart = performance.now();
   const { user, gistId } = await params;
   const gist = await fetchGist(gistId);
-  console.log(`[PERF] generateMetadata: ${(performance.now() - metaStart).toFixed(0)}ms`);
+  console.log(
+    `[PERF] generateMetadata: ${(performance.now() - metaStart).toFixed(0)}ms`,
+  );
 
   if (!gist) {
     return { title: "Not Found · gists.sh" };
@@ -66,7 +76,9 @@ export default async function GistPage({ params, searchParams }: PageProps) {
     fetchUser(user),
   ]);
   const fetchEnd = performance.now();
-  console.log(`[PERF] Fetch gist+user: ${(fetchEnd - fetchStart).toFixed(0)}ms`);
+  console.log(
+    `[PERF] Fetch gist+user: ${(fetchEnd - fetchStart).toFixed(0)}ms`,
+  );
 
   if (!gist) {
     notFound();
@@ -77,16 +89,18 @@ export default async function GistPage({ params, searchParams }: PageProps) {
 
   // Select active file
   const activeFile = fileParam
-    ? files.find((f) => f.filename === fileParam) ?? files[0]
+    ? (files.find((f) => f.filename === fileParam) ?? files[0])
     : files[0];
 
   const activeFilename = activeFile.filename;
 
   const renderStart = performance.now();
   const jsx = (
-    <main className="min-h-screen">
+    <main className="min-h-screen flex flex-col">
       <HashScroller />
-      <div className={`max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12${monoMode ? " font-mono" : ""}`}>
+      <div
+        className={`max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full flex-1 flex flex-col${monoMode ? " font-mono" : ""}`}
+      >
         {/* Header */}
         {!hideHeader && (
           <header className="flex items-start justify-between mb-8">
@@ -101,7 +115,12 @@ export default async function GistPage({ params, searchParams }: PageProps) {
               )}
             </div>
 
-            <PageCopyButtons content={activeFile.content} originalUrl={gist.html_url} user={user} gistId={gistId} />
+            <PageCopyButtons
+              content={activeFile.content}
+              originalUrl={gist.html_url}
+              user={user}
+              gistId={gistId}
+            />
           </header>
         )}
 
@@ -119,13 +138,16 @@ export default async function GistPage({ params, searchParams }: PageProps) {
 
         {/* Content */}
         <CodeBlockEnhancer>
-          <div id="gist-content" className={`min-h-[70vh]${!hideHeader && filenames.length > 1 ? " mt-8" : ""}`}>
+          <div
+            id="gist-content"
+            className={`flex-1 flex flex-col${!hideHeader && filenames.length > 1 ? " mt-8" : ""}`}
+          >
             {isMarkdown(activeFilename) ? (
-              <Suspense>
+              <Suspense fallback={<ContentLoader />}>
                 <MarkdownRenderer content={activeFile.content} />
               </Suspense>
             ) : (
-              <Suspense fallback={<div className="animate-pulse h-64 bg-neutral-100 dark:bg-neutral-900 rounded" />}>
+              <Suspense fallback={<ContentLoader />}>
                 <CodeRenderer
                   content={activeFile.content}
                   filename={activeFilename}
@@ -164,7 +186,11 @@ export default async function GistPage({ params, searchParams }: PageProps) {
     </main>
   );
   const renderEnd = performance.now();
-  console.log(`[PERF] JSX construction: ${(renderEnd - renderStart).toFixed(0)}ms`);
-  console.log(`[PERF] Total page component: ${(renderEnd - pageStart).toFixed(0)}ms`);
+  console.log(
+    `[PERF] JSX construction: ${(renderEnd - renderStart).toFixed(0)}ms`,
+  );
+  console.log(
+    `[PERF] Total page component: ${(renderEnd - pageStart).toFixed(0)}ms`,
+  );
   return jsx;
 }
