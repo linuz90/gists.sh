@@ -15,6 +15,38 @@ export const metadata: Metadata = {
 // 2) It resolves first-paint theme as: ?theme=dark|light, otherwise system.
 // 3) It also writes localStorage.theme so next-themes' later body script agrees.
 // 4) After hydration, ThemeParamSync keeps runtime state aligned with URL params.
+const themePrepaintStyle = `
+html,
+body {
+  background: #ffffff;
+  color: #171717;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  html,
+  body {
+    background: #0a0a0a;
+    color: #f5f5f5;
+    color-scheme: dark;
+  }
+}
+
+html.light,
+html.light body {
+  background: #ffffff;
+  color: #171717;
+  color-scheme: light;
+}
+
+html.dark,
+html.dark body {
+  background: #0a0a0a;
+  color: #f5f5f5;
+  color-scheme: dark;
+}
+`;
+
 const themeInitScript = `
 (() => {
   try {
@@ -55,6 +87,7 @@ export default function RootLayout({
       className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <head>
+        <style dangerouslySetInnerHTML={{ __html: themePrepaintStyle }} />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <link rel="llms-txt" href="/llms.txt" />
       </head>
