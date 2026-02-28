@@ -11,6 +11,9 @@ function ThemeParamSync() {
   const { setTheme } = useTheme();
 
   useEffect(() => {
+    // Runtime theme source of truth:
+    // ?theme=dark|light forces that theme, otherwise use system.
+    // This mirrors the early head script in layout.tsx to avoid drift.
     const theme = searchParams.get("theme");
     if (theme === "dark" || theme === "light") {
       setTheme(theme);
@@ -24,6 +27,8 @@ function ThemeParamSync() {
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
+    // next-themes still injects its own script in <body>; the layout head script
+    // handles first paint, this provider handles hydrated runtime updates.
     <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
       <Suspense>
         <ThemeParamSync />

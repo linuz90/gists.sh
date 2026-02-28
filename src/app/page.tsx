@@ -95,6 +95,7 @@ export default function Home() {
               minimal page, even if just for 10 seconds.
             </p>
             <div className="flex items-center gap-2.5 pt-1">
+              {/* eslint-disable-next-line @next/next/no-img-element -- keep raw img to avoid optimization/runtime image costs */}
               <img
                 src="https://www.fabrizio.so/avatar.jpeg"
                 alt="Fabrizio Rinaldi"

@@ -13,7 +13,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
+import { cache, Suspense } from "react";
 
 function ContentLoader() {
   return (
@@ -34,11 +34,14 @@ interface PageProps {
   }>;
 }
 
+const fetchGistCached = cache(async (gistId: string) => fetchGist(gistId));
+const fetchUserCached = cache(async (username: string) => fetchUser(username));
+
 export async function generateMetadata({
   params,
 }: PageProps): Promise<Metadata> {
   const { user, gistId } = await params;
-  const gist = await fetchGist(gistId);
+  const gist = await fetchGistCached(gistId);
 
   if (!gist) {
     return { title: "Not Found · gists.sh" };
@@ -103,8 +106,8 @@ export default async function GistPage({ params, searchParams }: PageProps) {
   const hideFooter = resolvedSearchParams.nofooter !== undefined;
   const monoMode = resolvedSearchParams.mono !== undefined;
   const [gist, githubUser] = await Promise.all([
-    fetchGist(gistId),
-    fetchUser(user),
+    fetchGistCached(gistId),
+    fetchUserCached(user),
   ]);
 
   if (!gist) {

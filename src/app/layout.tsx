@@ -10,6 +10,39 @@ export const metadata: Metadata = {
   description: "Gists, but beautiful",
 };
 
+// Theme initialization order:
+// 1) This inline script runs in <head> before first paint to avoid flash.
+// 2) It resolves first-paint theme as: ?theme=dark|light, otherwise system.
+// 3) It also writes localStorage.theme so next-themes' later body script agrees.
+// 4) After hydration, ThemeParamSync keeps runtime state aligned with URL params.
+const themeInitScript = `
+(() => {
+  try {
+    const root = document.documentElement;
+    const params = new URLSearchParams(window.location.search);
+    const queryTheme = params.get("theme");
+    const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+
+    const theme =
+      queryTheme === "dark" || queryTheme === "light"
+        ? queryTheme
+        : systemTheme;
+
+    // Keep next-themes' later body script in sync with URL-based overrides.
+    localStorage.setItem(
+      "theme",
+      queryTheme === "dark" || queryTheme === "light" ? queryTheme : "system",
+    );
+
+    root.classList.remove("light", "dark");
+    root.classList.add(theme);
+    root.style.colorScheme = theme;
+  } catch {}
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,6 +55,7 @@ export default function RootLayout({
       className={`${GeistSans.variable} ${GeistMono.variable}`}
     >
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <link rel="llms-txt" href="/llms.txt" />
       </head>
       <body className="font-sans bg-white text-neutral-900 dark:bg-neutral-950 dark:text-neutral-100 antialiased">

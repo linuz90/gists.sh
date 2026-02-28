@@ -47,14 +47,10 @@ export async function fetchUser(username: string): Promise<GitHubUser | null> {
   }
 
   try {
-    const start = performance.now();
     const res = await fetch(`https://api.github.com/users/${username}`, {
       headers,
       next: { revalidate: 86400 },
     });
-    console.log(
-      `[PERF] fetchUser(${username}): ${(performance.now() - start).toFixed(0)}ms (status: ${res.status})`,
-    );
 
     if (!res.ok) return null;
 
@@ -89,15 +85,11 @@ export async function fetchGist(gistId: string): Promise<Gist | null> {
     headers.Authorization = `Bearer ${process.env.GITHUB_TOKEN}`;
   }
 
-  const start = performance.now();
   const res = await fetch(`https://api.github.com/gists/${gistId}`, {
     headers,
     // Tag enables on-demand purge via POST /{user}/{gistId}/refresh
     next: { revalidate: 86400, tags: [`gist-${gistId}`] },
   });
-  console.log(
-    `[PERF] fetchGist(${gistId}): ${(performance.now() - start).toFixed(0)}ms (status: ${res.status})`,
-  );
 
   if (res.status === 404) return null;
 
