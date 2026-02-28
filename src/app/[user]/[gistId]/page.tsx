@@ -6,14 +6,14 @@ import { HashScroller } from "@/components/hash-scroller";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { PageCopyButtons } from "@/components/page-copy-buttons";
 import { SecretBadge } from "@/components/secret-badge";
-import { isBotRequest } from "@/lib/bot-detection";
 import { fetchGist, fetchUser, isMarkdown } from "@/lib/github";
 import matter from "gray-matter";
 import type { Metadata } from "next";
-import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
+
+export const revalidate = 86400;
 
 function ContentLoader() {
   return (
@@ -99,8 +99,6 @@ export async function generateMetadata({
 export default async function GistPage({ params, searchParams }: PageProps) {
   const { user, gistId } = await params;
   const resolvedSearchParams = await searchParams;
-  const requestHeaders = await headers();
-  const isBot = isBotRequest(requestHeaders);
   const { file: fileParam } = resolvedSearchParams;
   const hideHeader = resolvedSearchParams.noheader !== undefined;
   const hideFooter = resolvedSearchParams.nofooter !== undefined;
@@ -185,13 +183,7 @@ export default async function GistPage({ params, searchParams }: PageProps) {
             <p className="sr-only">
               For the full content of this gist, refer to {githubUrl}
             </p>
-            {isBot ? (
-              activeContent
-            ) : (
-              <Suspense fallback={<ContentLoader />}>
-                {activeContent}
-              </Suspense>
-            )}
+            <Suspense fallback={<ContentLoader />}>{activeContent}</Suspense>
           </div>
         </CodeBlockEnhancer>
 
