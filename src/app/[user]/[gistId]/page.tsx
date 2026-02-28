@@ -6,9 +6,11 @@ import { HashScroller } from "@/components/hash-scroller";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { PageCopyButtons } from "@/components/page-copy-buttons";
 import { SecretBadge } from "@/components/secret-badge";
+import { isBotRequest } from "@/lib/bot-detection";
 import { fetchGist, fetchUser, isMarkdown } from "@/lib/github";
 import matter from "gray-matter";
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
@@ -64,10 +66,16 @@ export async function generateMetadata({
       ? rawPreview.slice(0, 200).replace(/\s+\S*$/, "") + "..."
       : rawPreview
     : `${firstFile?.filename} by ${user}`;
+  const githubUrl = `https://gist.github.com/${user}/${gistId}`;
 
   return {
     title: `${title} · gists.sh`,
     description,
+    ...(gist.public && {
+      alternates: {
+        canonical: githubUrl,
+      },
+    }),
     ...(!gist.public && {
       robots: { index: false, follow: false },
     }),
@@ -88,6 +96,8 @@ export async function generateMetadata({
 export default async function GistPage({ params, searchParams }: PageProps) {
   const { user, gistId } = await params;
   const resolvedSearchParams = await searchParams;
+  const requestHeaders = await headers();
+  const isBot = isBotRequest(requestHeaders);
   const { file: fileParam } = resolvedSearchParams;
   const hideHeader = resolvedSearchParams.noheader !== undefined;
   const hideFooter = resolvedSearchParams.nofooter !== undefined;
@@ -110,6 +120,16 @@ export default async function GistPage({ params, searchParams }: PageProps) {
     : files[0];
 
   const activeFilename = activeFile.filename;
+  const githubUrl = `https://gist.github.com/${user}/${gistId}`;
+  const activeContent = isMarkdown(activeFilename) ? (
+    <MarkdownRenderer content={activeFile.content} />
+  ) : (
+    <CodeRenderer
+      content={activeFile.content}
+      filename={activeFilename}
+      language={activeFile.language}
+    />
+  );
 
   return (
     <main className="min-h-screen flex flex-col">
@@ -159,17 +179,14 @@ export default async function GistPage({ params, searchParams }: PageProps) {
             id="gist-content"
             className={`flex-1 flex flex-col${!hideHeader && filenames.length > 1 ? " mt-8" : ""}`}
           >
-            {isMarkdown(activeFilename) ? (
-              <Suspense fallback={<ContentLoader />}>
-                <MarkdownRenderer content={activeFile.content} />
-              </Suspense>
+            <p className="sr-only">
+              For the full content of this gist, refer to {githubUrl}
+            </p>
+            {isBot ? (
+              activeContent
             ) : (
               <Suspense fallback={<ContentLoader />}>
-                <CodeRenderer
-                  content={activeFile.content}
-                  filename={activeFilename}
-                  language={activeFile.language}
-                />
+                {activeContent}
               </Suspense>
             )}
           </div>
