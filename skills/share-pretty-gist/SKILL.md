@@ -78,16 +78,19 @@ Show gists.sh as the primary shareable link:
 
 - Try to use language tags on all code blocks (` ```typescript `, ` ```yaml `, etc.) for proper syntax highlighting.
 - GFM alerts also can be used because they render nicely: `> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]`, `> [!CAUTION]`.
-- Avid raw HTML unless strictly necessary. Stick to standard GitHub Flavored Markdown.
+- Avoid raw HTML unless strictly necessary. Stick to standard GitHub Flavored Markdown.
 - Multi-file gists render as tabs on gists.sh. The first file is shown by default.
 - Tables, task lists, and other GFM features all work.
+- YAML front matter in markdown files renders as a structured table above the content.
+- Structured data files get interactive viewers: JSON/GeoJSON (collapsible tree), YAML (tree), CSV/TSV (sortable table), ICS/iCal (calendar cards). Use proper file extensions so the viewer activates.
+- Link to a specific file in a multi-file gist with `?file={filename}`.
 
 ## Updating Existing Gists
 
 When updating a gist that was previously shared:
 
 1. Edit the gist with `gh gist edit {id}`
-2. POST to the refresh endpoint to bust stale cache (5-minute cooldown between refreshes):
+2. POST to the refresh endpoint to bust stale cache (1-minute cooldown between refreshes):
    ```bash
    curl -s -X POST https://gists.sh/{user}/{id}/refresh
    ```
@@ -104,5 +107,6 @@ Only suggest these when the user explicitly requests a specific display style. D
 - `?noheader` -- hide title, tabs, and copy buttons
 - `?nofooter` -- hide author info and footer
 - `?mono` -- monospace font for all text
+- `?file={filename}` -- show a specific file from multi-file gists
 
 Parameters are composable: `gists.sh/{user}/{id}?theme=dark&noheader&nofooter`

@@ -10,7 +10,16 @@ A minimal, beautiful viewer for GitHub Gists. Replace `gist.github.com` with `gi
 gist.github.com/user/abc123  →  gists.sh/user/abc123
 ```
 
-Markdown gets proper typography. Code gets syntax highlighting via Shiki. Multi-file gists get tabs. Everything looks clean.
+Every file type gets the best possible rendering:
+
+- **Markdown** - proper typography, GFM alerts, frontmatter tables, auto table of contents, heading anchors
+- **Code** - syntax highlighting via Shiki (same engine as VS Code), with copy buttons on every block
+- **JSON / GeoJSON** - collapsible tree viewer
+- **YAML** - parsed and displayed as a navigable tree
+- **CSV / TSV** - sortable, searchable data table
+- **ICS / iCal** - calendar event cards with dates, locations, and recurrence
+
+Multi-file gists get tabs. Toggle between "Pretty" and "Raw" views on structured files. Everything looks clean.
 
 ### URL parameters
 
@@ -23,15 +32,17 @@ Customize how any gist renders by appending query params:
 | `?noheader` | Hide title, tabs, and copy buttons |
 | `?nofooter` | Hide author info and footer |
 | `?mono` | Monospace font for all text |
+| `?file={filename}` | Show a specific file from multi-file gists |
 
 Combine them: `gists.sh/user/abc123?theme=dark&noheader&nofooter`
 
 ### Raw content
 
-Append `.md` (or any extension) to get the raw file content with proper `Content-Type` headers:
+Fetch raw file content with proper `Content-Type` headers via the API:
 
 ```
-gists.sh/user/abc123.md
+gists.sh/api/raw/{gist_id}
+gists.sh/api/raw/{gist_id}?file={filename}
 ```
 
 ## Agent skill
