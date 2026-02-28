@@ -6,7 +6,7 @@ import { HashScroller } from "@/components/hash-scroller";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { PageCopyButtons } from "@/components/page-copy-buttons";
 import { SecretBadge } from "@/components/secret-badge";
-import { fetchGist, fetchUser, isMarkdown } from "@/lib/github";
+import { fetchGist, fetchUser, isMarkdown, isPlainText } from "@/lib/github";
 import matter from "gray-matter";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -124,6 +124,10 @@ export default async function GistPage({ params, searchParams }: PageProps) {
   const githubUrl = `https://gist.github.com/${user}/${gistId}`;
   const activeContent = isMarkdown(activeFilename) ? (
     <MarkdownRenderer content={activeFile.content} />
+  ) : isPlainText(activeFilename) ? (
+    <div className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
+      {activeFile.content}
+    </div>
   ) : (
     <CodeRenderer
       content={activeFile.content}
@@ -158,6 +162,7 @@ export default async function GistPage({ params, searchParams }: PageProps) {
               originalUrl={gist.html_url}
               user={user}
               gistId={gistId}
+              showCopyFormatted={isMarkdown(activeFilename)}
             />
           </header>
         )}
@@ -178,7 +183,7 @@ export default async function GistPage({ params, searchParams }: PageProps) {
         <CodeBlockEnhancer>
           <div
             id="gist-content"
-            className={`flex-1 flex flex-col${!hideHeader && filenames.length > 1 ? " mt-8" : ""}`}
+            className={`flex-1 flex flex-col${!hideHeader && filenames.length > 1 ? " mt-8 after-tabs" : ""}`}
           >
             <p className="sr-only">
               For the full content of this gist, refer to {githubUrl}

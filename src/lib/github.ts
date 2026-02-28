@@ -110,10 +110,16 @@ export async function fetchGist(gistId: string): Promise<Gist | null> {
 }
 
 const MARKDOWN_EXTENSIONS = new Set(["md", "markdown", "mdx"]);
+const PLAIN_TEXT_EXTENSIONS = new Set(["txt", "text"]);
 
 export function isMarkdown(filename: string): boolean {
   const ext = filename.split(".").pop()?.toLowerCase() ?? "";
   return MARKDOWN_EXTENSIONS.has(ext);
+}
+
+export function isPlainText(filename: string): boolean {
+  const ext = filename.split(".").pop()?.toLowerCase() ?? "";
+  return PLAIN_TEXT_EXTENSIONS.has(ext);
 }
 
 export function getFileExtension(filename: string): string {

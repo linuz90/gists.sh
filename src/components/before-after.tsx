@@ -3,13 +3,17 @@
 import { GistsMockup } from "@/components/mockups/gists-mockup";
 import { GitHubMockup } from "@/components/mockups/github-mockup";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { ArrowUpRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type View = "github" | "gists";
 
+const DEMO_GIST = "linuz90/146300208a53384d3aff494d5fcac234";
+
 const VIEW_OPTIONS = [
   {
     value: "github" as View,
+    href: `https://gist.github.com/${DEMO_GIST}`,
     label: (
       <>
         gist.github.com
@@ -19,6 +23,7 @@ const VIEW_OPTIONS = [
   },
   {
     value: "gists" as View,
+    href: `https://gists.sh/${DEMO_GIST}`,
     label: (
       <>
         gists.sh

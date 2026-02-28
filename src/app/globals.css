@@ -73,6 +73,11 @@ summary {
   margin-top: 0;
 }
 
+/* After file tabs, give markdown a small buffer to match code blocks' visual weight */
+.after-tabs .markdown-body > *:first-child {
+  margin-top: 0.5em;
+}
+
 /* Headings */
 .markdown-body h1,
 .markdown-body h2,
@@ -188,18 +193,6 @@ summary {
   border-radius: 0.25rem;
   font-size: 0.8125em;
   font-family: var(--font-mono);
-}
-
-/* Code blocks (pre without Shiki) */
-.markdown-body pre:not(.shiki) {
-  background: var(--color-neutral-50);
-  border-radius: 0.5rem;
-  padding: 1.25rem;
-  overflow-x: auto;
-  font-size: 0.8125rem;
-  line-height: 1.7;
-  margin-top: 1.5em;
-  margin-bottom: 1.5em;
 }
 
 /* Blockquotes */
@@ -390,6 +383,10 @@ pre.shiki {
   overflow-x: auto;
   font-size: 0.8125rem;
   line-height: 1.7;
+}
+
+/* Margins only inside prose, not standalone code files (CodeRenderer) */
+.markdown-body pre.shiki {
   margin-top: 1.5em;
   margin-bottom: 1.5em;
 }

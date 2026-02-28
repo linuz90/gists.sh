@@ -19,6 +19,7 @@ interface PageCopyButtonsProps {
   originalUrl: string;
   user: string;
   gistId: string;
+  showCopyFormatted?: boolean;
 }
 
 export function PageCopyButtons({
@@ -26,6 +27,7 @@ export function PageCopyButtons({
   originalUrl,
   user,
   gistId,
+  showCopyFormatted = false,
 }: PageCopyButtonsProps) {
   const { copied, copy, copyFormatted } = useCopyToClipboard();
   const router = useRouter();
@@ -109,7 +111,7 @@ export function PageCopyButtons({
           handleCopyRaw();
           break;
         case "f":
-          handleCopyFormatted();
+          if (showCopyFormatted) handleCopyFormatted();
           break;
         case "l":
           handleCopyLink();
@@ -165,11 +167,13 @@ export function PageCopyButtons({
             <span className="flex-1">Copy raw</span>
             <span className={shortcutClass}>C</span>
           </DropdownMenu.Item>
-          <DropdownMenu.Item onSelect={handleCopyFormatted}>
-            <Files size={14} />
-            <span className="flex-1">Copy formatted</span>
-            <span className={shortcutClass}>F</span>
-          </DropdownMenu.Item>
+          {showCopyFormatted && (
+            <DropdownMenu.Item onSelect={handleCopyFormatted}>
+              <Files size={14} />
+              <span className="flex-1">Copy formatted</span>
+              <span className={shortcutClass}>F</span>
+            </DropdownMenu.Item>
+          )}
           <DropdownMenu.Item onSelect={handleCopyLink}>
             <Link size={14} />
             <span className="flex-1">Copy link</span>

@@ -1,7 +1,21 @@
 import { BeforeAfter } from "@/components/before-after";
+import { CopiableBlock } from "@/components/copiable-block";
 import { ParamConfigurator } from "@/components/param-configurator";
+import { SectionLabel } from "@/components/ui/section-label";
 import { Analytics } from "@vercel/analytics/next";
 import { ArrowRight } from "lucide-react";
+
+const PROMPT_TEXT = `When sharing code, notes, or snippets via GitHub Gists, always share the gists.sh link instead of the gist.github.com URL. Just replace "gist.github.com" with "gists.sh" in the URL.
+
+Always create secret gists (never --public unless explicitly asked). Use \`gh gist create <files> -d "descriptive title"\`. The -d description becomes the page title on gists.sh, so make it clear and useful.
+
+Use correct filenames with proper extensions (e.g. server.ts, config.yml, query.sql) so syntax highlighting works. For markdown content, use a .md file.
+
+After creating a new gist, fetch the gists.sh URL once (e.g. curl) to warm the cache so the page loads instantly for the reader.
+
+After updating an existing gist, POST to gists.sh/{user}/{gist_id}/refresh to bust the stale cache, then fetch the gists.sh URL to warm it with the updated content.
+
+Example: gists.sh/user/gist_id`;
 
 export const dynamic = "force-dynamic";
 
@@ -44,10 +58,10 @@ export default function Home() {
         </div>
 
         {/* How it works */}
-        <div className="space-y-5">
-          <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+        <div className="space-y-5 mb-6">
+          <SectionLabel>
             How it works
-          </h2>
+          </SectionLabel>
           <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
             Take any GitHub Gist URL and replace{" "}
             <code className="font-mono text-neutral-700 dark:text-neutral-300">
@@ -78,11 +92,47 @@ export default function Home() {
 
         <ParamConfigurator />
 
+        {/* Agent skill */}
+        <div className="space-y-5">
+          <SectionLabel>
+            Agent skill
+          </SectionLabel>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            Install our{" "}
+            <code className="font-mono text-neutral-700 dark:text-neutral-300">
+              share-pretty-gist
+            </code>{" "}
+            skill to teach your AI agents to share beautiful gists whenever you
+            need to share notes, code, reports, or anything else.
+          </p>
+          <CopiableBlock
+            text="npx skills add linuz90/gists.sh"
+            className="overflow-x-auto"
+          />
+        </div>
+
+        {/* Or just prompt it */}
+        <div className="space-y-5">
+          <SectionLabel>
+            Or just prompt it
+          </SectionLabel>
+          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            No skill needed. Copy this into your agent&apos;s instructions
+            (OpenClaw, Claude Code, Cursor, etc.) and it will use gists.sh
+            automatically.
+          </p>
+          <CopiableBlock
+            text={PROMPT_TEXT}
+            className="leading-relaxed break-words"
+            preserveNewlines
+          />
+        </div>
+
         {/* About */}
         <div className="space-y-5">
-          <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+          <SectionLabel>
             Why this exists
-          </h2>
+          </SectionLabel>
           <div className="space-y-4">
             <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
               I use gists every day to share documents, research, and snippets
@@ -130,9 +180,9 @@ export default function Home() {
 
         {/* Open source & privacy */}
         <div className="space-y-5">
-          <h2 className="text-xs font-mono font-medium uppercase tracking-widest text-neutral-400 dark:text-neutral-500">
+          <SectionLabel>
             Open source
-          </h2>
+          </SectionLabel>
           <div className="space-y-4">
             <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
               gists.sh is fully open source. Gist pages have zero tracking or
