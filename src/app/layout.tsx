@@ -71,6 +71,8 @@ const themeInitScript = `
     root.classList.remove("light", "dark");
     root.classList.add(theme);
     root.style.colorScheme = theme;
+    root.style.background = theme === "dark" ? "#0a0a0a" : "#ffffff";
+    root.style.color = theme === "dark" ? "#f5f5f5" : "#171717";
   } catch {}
 })();
 `;
