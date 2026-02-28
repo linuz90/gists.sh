@@ -1,4 +1,5 @@
 import { XIcon } from "@/components/icons";
+import { Text } from "@/components/ui/text";
 import type { GitHubUser } from "@/lib/github";
 import { Globe, MapPin } from "lucide-react";
 import Image from "next/image";
@@ -50,13 +51,13 @@ export function AuthorFooter({ user }: AuthorFooterProps) {
           </div>
 
           {user.bio && (
-            <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400 line-clamp-2">
+            <Text className="mt-1 line-clamp-2">
               {user.bio}
-            </p>
+            </Text>
           )}
 
           {hasSocials && (
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-mono text-neutral-500 dark:text-neutral-500">
+            <Text variant="meta" as="div" className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1">
               {user.location && (
                 <span className="flex items-center gap-1">
                   <MapPin size={14} className="shrink-0" />
@@ -84,7 +85,7 @@ export function AuthorFooter({ user }: AuthorFooterProps) {
                   <XIcon className="shrink-0" />@{user.twitter_username}
                 </a>
               )}
-            </div>
+            </Text>
           )}
         </div>
       </div>

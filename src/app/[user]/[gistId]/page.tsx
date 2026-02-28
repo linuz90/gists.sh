@@ -6,6 +6,7 @@ import { HashScroller } from "@/components/hash-scroller";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { PageCopyButtons } from "@/components/page-copy-buttons";
 import { SecretBadge } from "@/components/secret-badge";
+import { Text } from "@/components/ui/text";
 import { fetchGist, fetchUser, isMarkdown, isPlainText } from "@/lib/github";
 import matter from "gray-matter";
 import type { Metadata } from "next";
@@ -151,9 +152,9 @@ export default async function GistPage({ params, searchParams }: PageProps) {
                 {!gist.public && <SecretBadge />}
               </h1>
               {gist.description && filenames.length === 1 && (
-                <p className="mt-1 text-xs font-mono text-neutral-500 dark:text-neutral-500 truncate">
+                <Text variant="meta" className="mt-1 truncate">
                   {activeFilename}
-                </p>
+                </Text>
               )}
             </div>
 
@@ -198,7 +199,11 @@ export default async function GistPage({ params, searchParams }: PageProps) {
         {/* Footer */}
         {!hideFooter && (
           <footer className="mt-8 pt-8 border-t border-neutral-100 dark:border-neutral-900">
-            <div className="flex items-center justify-between text-xs font-mono text-neutral-500 dark:text-neutral-600">
+            <Text
+              variant="meta"
+              as="div"
+              className="flex items-center justify-between"
+            >
               <a
                 href={gist.html_url}
                 target="_blank"
@@ -213,7 +218,7 @@ export default async function GistPage({ params, searchParams }: PageProps) {
               >
                 gists.sh
               </Link>
-            </div>
+            </Text>
           </footer>
         )}
       </div>

@@ -3,8 +3,8 @@
 import { GistsMockup } from "@/components/mockups/gists-mockup";
 import { GitHubMockup } from "@/components/mockups/github-mockup";
 import { SegmentedControl } from "@/components/ui/segmented-control";
-import { ArrowUpRight } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Text } from "./ui/text";
 
 type View = "github" | "gists";
 
@@ -64,10 +64,8 @@ export function BeforeAfter() {
   return (
     <div className="space-y-4">
       {/* Segmented control */}
-      <div className="relative z-1">
-        <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-2">
-          See the difference:
-        </p>
+      <div className="relative z-1 flex flex-col items-start gap-2.5">
+        <Text>See the difference:</Text>
         <SegmentedControl
           options={VIEW_OPTIONS}
           value={view}

@@ -2,6 +2,7 @@ import { BeforeAfter } from "@/components/before-after";
 import { CopiableBlock } from "@/components/copiable-block";
 import { ParamConfigurator } from "@/components/param-configurator";
 import { SectionLabel } from "@/components/ui/section-label";
+import { Text } from "@/components/ui/text";
 import { Analytics } from "@vercel/analytics/next";
 import { ArrowRight } from "lucide-react";
 
@@ -51,10 +52,10 @@ export default function Home() {
             </svg>
             gists.sh
           </h1>
-          <p className="text-base text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          <Text className="text-base">
             GitHub Gists are the fastest way to share code, notes, and snippets.
             But they look terrible. This fixes that.
-          </p>
+          </Text>
         </div>
 
         {/* How it works */}
@@ -62,7 +63,7 @@ export default function Home() {
           <SectionLabel>
             How it works
           </SectionLabel>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          <Text>
             Take any GitHub Gist URL and replace{" "}
             <code className="font-mono text-neutral-700 dark:text-neutral-300">
               gist.github.com
@@ -72,7 +73,7 @@ export default function Home() {
               gists.sh
             </code>
             . That&apos;s it.
-          </p>
+          </Text>
           <div className="font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 flex items-center gap-3 flex-wrap">
             <span className="text-neutral-400 dark:text-neutral-600 line-through decoration-neutral-400 dark:decoration-neutral-700">
               gist.github.com
@@ -97,14 +98,14 @@ export default function Home() {
           <SectionLabel>
             Agent skill
           </SectionLabel>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          <Text>
             Install our{" "}
             <code className="font-mono text-neutral-700 dark:text-neutral-300">
               share-pretty-gist
             </code>{" "}
             skill to teach your AI agents to share beautiful gists whenever you
             need to share notes, code, reports, or anything else.
-          </p>
+          </Text>
           <CopiableBlock
             text="npx skills add linuz90/gists.sh"
             className="overflow-x-auto"
@@ -116,11 +117,11 @@ export default function Home() {
           <SectionLabel>
             Or just prompt it
           </SectionLabel>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+          <Text>
             No skill needed. Copy this into your agent&apos;s instructions
             (OpenClaw, Claude Code, Cursor, etc.) and it will use gists.sh
             automatically.
-          </p>
+          </Text>
           <CopiableBlock
             text={PROMPT_TEXT}
             className="leading-relaxed break-words"
@@ -134,16 +135,16 @@ export default function Home() {
             Why this exists
           </SectionLabel>
           <div className="space-y-4">
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            <Text>
               I use gists every day to share documents, research, and snippets
               with teammates and friends. I also often have my AI agents create
               gists to share things with me.
-            </p>
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            </Text>
+            <Text>
               Gists are incredibly convenient, but not particularly nice to look
               at. I built this for those who, like me, would rather see a clean,
               minimal page, even if just for 10 seconds.
-            </p>
+            </Text>
             <div className="flex items-center gap-2.5 pt-1">
               {/* eslint-disable-next-line @next/next/no-img-element -- keep raw img to avoid optimization/runtime image costs */}
               <img
@@ -153,7 +154,7 @@ export default function Home() {
                 height={24}
                 className="rounded-full shrink-0"
               />
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
+              <Text>
                 <a
                   href="https://fabrizio.so"
                   target="_blank"
@@ -173,7 +174,7 @@ export default function Home() {
                 >
                   @linuz90
                 </a>
-              </p>
+              </Text>
             </div>
           </div>
         </div>
@@ -184,13 +185,13 @@ export default function Home() {
             Open source
           </SectionLabel>
           <div className="space-y-4">
-            <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+            <Text>
               gists.sh is fully open source. Gist pages have zero tracking or
               analytics. The only analytics run on this landing page via Vercel
               to count visitors. Your gists are fetched directly from the GitHub
               API and never stored. Secret gists are marked as noindex so search
               engines won&apos;t crawl them.
-            </p>
+            </Text>
             <a
               href="https://github.com/linuz90/gists.sh"
               target="_blank"

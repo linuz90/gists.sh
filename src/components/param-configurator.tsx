@@ -2,6 +2,7 @@
 
 import { Chip } from "@/components/ui/chip";
 import { SectionLabel } from "@/components/ui/section-label";
+import { Text } from "@/components/ui/text";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -145,9 +146,9 @@ export function ParamConfigurator() {
           <span className="text-blue-500">{paramString}</span>
         )}
       </Link>
-      <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
+      <Text>
         Append URL params to any gist link to customize how it looks.
-      </p>
+      </Text>
       <div className="font-mono text-xs border border-neutral-150 dark:border-neutral-800 rounded-lg px-4 py-3 space-y-1 text-neutral-500 dark:text-neutral-500">
         {PARAM_DOCS.map((d) => (
           <div key={d.param}>
