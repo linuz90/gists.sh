@@ -1,7 +1,7 @@
 "use client";
 
-import { GitHubMockup } from "@/components/mockups/github-mockup";
 import { GistsMockup } from "@/components/mockups/gists-mockup";
+import { GitHubMockup } from "@/components/mockups/github-mockup";
 import { SegmentedControl } from "@/components/ui/segmented-control";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -60,6 +60,9 @@ export function BeforeAfter() {
     <div className="space-y-4">
       {/* Segmented control */}
       <div className="relative z-1">
+        <p className="text-sm text-neutral-400 dark:text-neutral-500 mb-2">
+          See the difference:
+        </p>
         <SegmentedControl
           options={VIEW_OPTIONS}
           value={view}

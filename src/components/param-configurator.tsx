@@ -221,7 +221,7 @@ export function ParamConfigurator() {
         <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed">
           Append these URL params to any gist link to customize how it looks.
         </p>
-        <div className="font-mono text-xs bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 space-y-1 text-neutral-600 dark:text-neutral-400">
+        <div className="font-mono text-xs border border-neutral-150 dark:border-neutral-800 rounded-lg px-4 py-3 space-y-1 text-neutral-500 dark:text-neutral-500">
           {PARAM_DOCS.map((d) => (
             <div key={d.param}>
               <span className="text-neutral-700 dark:text-neutral-300">
