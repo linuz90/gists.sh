@@ -159,7 +159,7 @@ summary {
   list-style-type: decimal;
 }
 .markdown-body ::marker {
-  color: var(--color-neutral-500);
+  color: var(--color-neutral-350);
 }
 
 .markdown-body li {

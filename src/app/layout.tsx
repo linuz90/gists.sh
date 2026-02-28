@@ -62,11 +62,12 @@ const themeInitScript = `
         ? queryTheme
         : systemTheme;
 
-    // Keep next-themes' later body script in sync with URL-based overrides.
-    localStorage.setItem(
-      "theme",
-      queryTheme === "dark" || queryTheme === "light" ? queryTheme : "system",
-    );
+    // Only write to localStorage when NOT URL-forced. URL-forced themes
+    // are page-specific (handled via forcedTheme in providers.tsx) and
+    // must not pollute localStorage, which would affect other tabs.
+    if (!(queryTheme === "dark" || queryTheme === "light")) {
+      localStorage.setItem("theme", "system");
+    }
 
     root.classList.remove("light", "dark");
     root.classList.add(theme);
