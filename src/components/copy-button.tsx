@@ -28,9 +28,9 @@ export function CopyButton({
       {children ? (
         children
       ) : copied ? (
-        <Check size={16} className="text-green-600 dark:text-green-400" />
+        <Check size={15} className="text-green-600 dark:text-green-400" />
       ) : (
-        <Copy size={16} className="opacity-60" />
+        <Copy size={15} className="opacity-60" />
       )}
     </button>
   );

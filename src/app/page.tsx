@@ -1,4 +1,5 @@
 import { BeforeAfter } from "@/components/before-after";
+import { ClickToCopy } from "@/components/click-to-copy";
 import { CopiableBlock } from "@/components/copiable-block";
 import { ParamConfigurator } from "@/components/param-configurator";
 import { SectionLabel } from "@/components/ui/section-label";
@@ -106,10 +107,7 @@ export default function Home() {
             skill to teach your AI agents to share beautiful gists whenever you
             need to share notes, code, reports, or anything else.
           </Text>
-          <CopiableBlock
-            text="npx skills add linuz90/gists.sh"
-            className="overflow-x-auto"
-          />
+          <ClickToCopy text="npx skills add linuz90/gists.sh" toastMessage="Paste it in your terminal" />
         </div>
 
         {/* Or just prompt it */}

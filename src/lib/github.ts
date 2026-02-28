@@ -111,6 +111,10 @@ export async function fetchGist(gistId: string): Promise<Gist | null> {
 
 const MARKDOWN_EXTENSIONS = new Set(["md", "markdown", "mdx"]);
 const PLAIN_TEXT_EXTENSIONS = new Set(["txt", "text"]);
+const JSON_EXTENSIONS = new Set(["json", "geojson"]);
+const CSV_EXTENSIONS = new Set(["csv", "tsv"]);
+const YAML_EXTENSIONS = new Set(["yaml", "yml"]);
+const ICS_EXTENSIONS = new Set(["ics", "ical"]);
 
 export function isMarkdown(filename: string): boolean {
   const ext = filename.split(".").pop()?.toLowerCase() ?? "";
@@ -120,6 +124,35 @@ export function isMarkdown(filename: string): boolean {
 export function isPlainText(filename: string): boolean {
   const ext = filename.split(".").pop()?.toLowerCase() ?? "";
   return PLAIN_TEXT_EXTENSIONS.has(ext);
+}
+
+export function isJSON(filename: string): boolean {
+  const ext = filename.split(".").pop()?.toLowerCase() ?? "";
+  return JSON_EXTENSIONS.has(ext);
+}
+
+export function isCSV(filename: string): boolean {
+  const ext = filename.split(".").pop()?.toLowerCase() ?? "";
+  return CSV_EXTENSIONS.has(ext);
+}
+
+export function isTSV(filename: string): boolean {
+  const ext = filename.split(".").pop()?.toLowerCase() ?? "";
+  return ext === "tsv";
+}
+
+export function isYAML(filename: string): boolean {
+  const ext = filename.split(".").pop()?.toLowerCase() ?? "";
+  return YAML_EXTENSIONS.has(ext);
+}
+
+export function isICS(filename: string): boolean {
+  const ext = filename.split(".").pop()?.toLowerCase() ?? "";
+  return ICS_EXTENSIONS.has(ext);
+}
+
+export function isStructuredData(filename: string): boolean {
+  return isJSON(filename) || isCSV(filename) || isYAML(filename) || isICS(filename);
 }
 
 export function getFileExtension(filename: string): string {

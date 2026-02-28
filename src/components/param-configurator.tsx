@@ -3,6 +3,8 @@
 import { Chip } from "@/components/ui/chip";
 import { SectionLabel } from "@/components/ui/section-label";
 import { Text } from "@/components/ui/text";
+import { DEMO_GIST } from "@/lib/constants";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -132,19 +134,22 @@ export function ParamConfigurator() {
         </Chip>
       </div>
       <Link
-        href={`/linuz90/146300208a53384d3aff494d5fcac234${paramString}`}
+        href={`/${DEMO_GIST}${paramString}`}
         target="_blank"
-        className="block font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 hover:bg-neutral-200/70 dark:hover:bg-neutral-800 transition-colors overflow-hidden"
+        className="flex items-center justify-between font-mono text-sm bg-neutral-100 dark:bg-neutral-900 rounded-lg px-4 py-3 hover:bg-neutral-200/70 dark:hover:bg-neutral-800 transition-colors overflow-hidden"
       >
-        <span className="text-neutral-900 dark:text-neutral-100 font-medium">
-          gists.sh
+        <span>
+          <span className="text-neutral-900 dark:text-neutral-100 font-medium">
+            gists.sh
+          </span>
+          <span className="text-neutral-500 dark:text-neutral-600">
+            /{DEMO_GIST.replace(/\/(.{3}).+(.{3})$/, "/$1...$2")}
+          </span>
+          {paramString && (
+            <span className="text-blue-500">{paramString}</span>
+          )}
         </span>
-        <span className="text-neutral-500 dark:text-neutral-600">
-          /linuz90/146...234
-        </span>
-        {paramString && (
-          <span className="text-blue-500">{paramString}</span>
-        )}
+        <ArrowUpRight size={14} className="text-neutral-400 dark:text-neutral-600 shrink-0 ml-3" />
       </Link>
       <Text>
         Append URL params to any gist link to customize how it looks.

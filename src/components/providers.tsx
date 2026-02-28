@@ -1,37 +1,55 @@
 "use client";
 
 import { TooltipProvider } from "@radix-ui/react-tooltip";
-import { ThemeProvider, useTheme } from "next-themes";
+import { ThemeProvider } from "next-themes";
 import { useSearchParams } from "next/navigation";
-import { Suspense, useEffect } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { Toaster } from "sonner";
 
-function ThemeParamSync() {
+/**
+ * Reads ?theme=dark|light from the URL and tells the parent to set
+ * forcedTheme on ThemeProvider. This prevents URL-forced themes from
+ * persisting to localStorage and polluting other tabs/pages.
+ */
+function ThemeParamSync({
+  onForcedTheme,
+}: {
+  onForcedTheme: (theme: string | undefined) => void;
+}) {
   const searchParams = useSearchParams();
-  const { setTheme } = useTheme();
 
   useEffect(() => {
-    // Runtime theme source of truth:
-    // ?theme=dark|light forces that theme, otherwise use system.
-    // This mirrors the early head script in layout.tsx to avoid drift.
     const theme = searchParams.get("theme");
     if (theme === "dark" || theme === "light") {
-      setTheme(theme);
+      onForcedTheme(theme);
     } else {
-      setTheme("system");
+      onForcedTheme(undefined);
     }
-  }, [searchParams, setTheme]);
+  }, [searchParams, onForcedTheme]);
 
   return null;
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
+  // When a URL param forces a theme (?theme=dark|light), we use
+  // next-themes' forcedTheme so the choice is page-specific and
+  // doesn't write to localStorage / affect other tabs.
+  const [forcedTheme, setForcedTheme] = useState<string | undefined>();
+
+  const handleForcedTheme = useCallback(
+    (theme: string | undefined) => setForcedTheme(theme),
+    [],
+  );
+
   return (
-    // next-themes still injects its own script in <body>; the layout head script
-    // handles first paint, this provider handles hydrated runtime updates.
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      forcedTheme={forcedTheme}
+    >
       <Suspense>
-        <ThemeParamSync />
+        <ThemeParamSync onForcedTheme={handleForcedTheme} />
       </Suspense>
       <TooltipProvider delayDuration={300}>
         {children}

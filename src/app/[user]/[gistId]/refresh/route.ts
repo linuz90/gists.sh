@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 // Best-effort rate limit: in-memory, so resets on cold starts (fine for serverless)
 const cooldowns = new Map<string, number>();
-const COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
+const COOLDOWN_MS = 60 * 1000; // 1 minute
 
 export async function POST(
   _request: NextRequest,

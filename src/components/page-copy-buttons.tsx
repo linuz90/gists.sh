@@ -5,6 +5,7 @@ import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import {
   Check,
   Copy,
+  Download,
   ExternalLink,
   Files,
   Link,
@@ -16,6 +17,7 @@ import { toast } from "sonner";
 
 interface PageCopyButtonsProps {
   content: string;
+  filename: string;
   originalUrl: string;
   user: string;
   gistId: string;
@@ -24,6 +26,7 @@ interface PageCopyButtonsProps {
 
 export function PageCopyButtons({
   content,
+  filename,
   originalUrl,
   user,
   gistId,
@@ -66,6 +69,19 @@ export function PageCopyButtons({
     copy(originalUrl, "Original URL copied");
   }, [copy, originalUrl]);
 
+  const handleDownload = useCallback(() => {
+    const blob = new Blob([content], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast("File downloaded");
+  }, [content, filename]);
+
   const handleOpenOriginal = useCallback(() => {
     window.open(originalUrl, "_blank", "noopener,noreferrer");
   }, [originalUrl]);
@@ -83,7 +99,7 @@ export function PageCopyButtons({
         router.refresh();
         toast.success("Gist refreshed", { id: toastId });
       } else if (res.status === 429) {
-        toast.error("Please wait a few minutes before refreshing again", {
+        toast.error("Please wait a minute before refreshing again", {
           id: toastId,
         });
       } else {
@@ -110,6 +126,9 @@ export function PageCopyButtons({
         case "c":
           handleCopyRaw();
           break;
+        case "d":
+          handleDownload();
+          break;
         case "f":
           if (showCopyFormatted) handleCopyFormatted();
           break;
@@ -135,8 +154,10 @@ export function PageCopyButtons({
     handleCopyFormatted,
     handleCopyLink,
     handleCopyOriginalUrl,
+    handleDownload,
     handleOpenOriginal,
     handleRefresh,
+    showCopyFormatted,
   ]);
 
   const triggerClass =
@@ -174,6 +195,11 @@ export function PageCopyButtons({
               <span className={shortcutClass}>F</span>
             </DropdownMenu.Item>
           )}
+          <DropdownMenu.Item onSelect={handleDownload}>
+            <Download size={14} />
+            <span className="flex-1">Download file</span>
+            <span className={shortcutClass}>D</span>
+          </DropdownMenu.Item>
           <DropdownMenu.Item onSelect={handleCopyLink}>
             <Link size={14} />
             <span className="flex-1">Copy link</span>

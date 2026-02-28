@@ -5,9 +5,25 @@ import { FileTabs } from "@/components/file-tabs";
 import { HashScroller } from "@/components/hash-scroller";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { PageCopyButtons } from "@/components/page-copy-buttons";
+import { CsvViewer } from "@/components/renderers/csv-viewer";
+import { IcsViewer } from "@/components/renderers/ics-viewer";
+import { JsonViewer } from "@/components/renderers/json-viewer";
+import { StructuredFileViewer } from "@/components/renderers/structured-file-viewer";
+import { YamlViewer } from "@/components/renderers/yaml-viewer";
 import { SecretBadge } from "@/components/secret-badge";
 import { Text } from "@/components/ui/text";
-import { fetchGist, fetchUser, isMarkdown, isPlainText } from "@/lib/github";
+import {
+  fetchGist,
+  fetchUser,
+  isCSV,
+  isICS,
+  isJSON,
+  isMarkdown,
+  isPlainText,
+  isStructuredData,
+  isYAML,
+} from "@/lib/github";
+import { getShikiLang, highlightCode } from "@/lib/shiki";
 import matter from "gray-matter";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -123,8 +139,33 @@ export default async function GistPage({ params, searchParams }: PageProps) {
 
   const activeFilename = activeFile.filename;
   const githubUrl = `https://gist.github.com/${user}/${gistId}`;
+
+  // Pre-render Shiki HTML for structured files (used in raw view toggle)
+  const rawHtml = isStructuredData(activeFilename)
+    ? await highlightCode(
+        activeFile.content,
+        getShikiLang(activeFilename, activeFile.language),
+      )
+    : "";
+
   const activeContent = isMarkdown(activeFilename) ? (
     <MarkdownRenderer content={activeFile.content} />
+  ) : isJSON(activeFilename) ? (
+    <StructuredFileViewer rawHtml={rawHtml} rawContent={activeFile.content}>
+      <JsonViewer content={activeFile.content} />
+    </StructuredFileViewer>
+  ) : isYAML(activeFilename) ? (
+    <StructuredFileViewer rawHtml={rawHtml} rawContent={activeFile.content}>
+      <YamlViewer content={activeFile.content} />
+    </StructuredFileViewer>
+  ) : isCSV(activeFilename) ? (
+    <StructuredFileViewer rawHtml={rawHtml} rawContent={activeFile.content}>
+      <CsvViewer content={activeFile.content} filename={activeFilename} />
+    </StructuredFileViewer>
+  ) : isICS(activeFilename) ? (
+    <StructuredFileViewer rawHtml={rawHtml} rawContent={activeFile.content}>
+      <IcsViewer content={activeFile.content} />
+    </StructuredFileViewer>
   ) : isPlainText(activeFilename) ? (
     <div className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
       {activeFile.content}
@@ -160,6 +201,7 @@ export default async function GistPage({ params, searchParams }: PageProps) {
 
             <PageCopyButtons
               content={activeFile.content}
+              filename={activeFilename}
               originalUrl={gist.html_url}
               user={user}
               gistId={gistId}
@@ -168,23 +210,21 @@ export default async function GistPage({ params, searchParams }: PageProps) {
           </header>
         )}
 
-        {/* File tabs */}
-        {!hideHeader && (
-          <Suspense>
-            <FileTabs
-              filenames={filenames}
-              activeFile={activeFilename}
-              user={user}
-              gistId={gistId}
-            />
-          </Suspense>
-        )}
+        {/* File tabs (always visible for multi-file gists, even with noheader) */}
+        <Suspense>
+          <FileTabs
+            filenames={filenames}
+            activeFile={activeFilename}
+            user={user}
+            gistId={gistId}
+          />
+        </Suspense>
 
         {/* Content */}
         <CodeBlockEnhancer>
           <div
             id="gist-content"
-            className={`flex-1 flex flex-col${!hideHeader && filenames.length > 1 ? " mt-8 after-tabs" : ""}`}
+            className={`flex-1 flex flex-col${filenames.length > 1 ? " mt-6 after-tabs" : ""}`}
           >
             <p className="sr-only">
               For the full content of this gist, refer to {githubUrl}

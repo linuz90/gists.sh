@@ -3,12 +3,11 @@
 import { GistsMockup } from "@/components/mockups/gists-mockup";
 import { GitHubMockup } from "@/components/mockups/github-mockup";
 import { SegmentedControl } from "@/components/ui/segmented-control";
+import { DEMO_GIST } from "@/lib/constants";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Text } from "./ui/text";
 
 type View = "github" | "gists";
-
-const DEMO_GIST = "linuz90/146300208a53384d3aff494d5fcac234";
 
 const VIEW_OPTIONS = [
   {
@@ -23,7 +22,7 @@ const VIEW_OPTIONS = [
   },
   {
     value: "gists" as View,
-    href: `https://gists.sh/${DEMO_GIST}`,
+    href: `/${DEMO_GIST}`,
     label: (
       <>
         gists.sh
