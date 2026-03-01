@@ -69,6 +69,7 @@ Show gists.sh as the primary shareable link:
 - **ALWAYS create SECRET gists.** Even when asked to "share with someone" or "share externally", the gist must be secret. Only use `--public` if the user EXPLICITLY asks for a public gist.
 - **Always include `-d`** with a clear, concise, but descriptive title. This is the first thing readers see on gists.sh.
 - **Use correct filenames with proper extensions** (e.g. `server.ts`, `config.yml`, `Dockerfile`) so syntax highlighting works correctly.
+- **Use natural, descriptive filenames.** Never prefix filenames with redundant words like "gist-" or "shared-" (e.g. use `README.md` not `gist-readme.md`, use `setup-guide.md` not `gist-setup-guide.md`).
 - **Always warm the cache** after creating or updating a gist.
 - Try to avoid using **em dashes** in any content, unless they're already in the original content to share.
 - **No meta-commentary** ("The user asked me to...", "Here is a summary of..."). Get straight to the content.
