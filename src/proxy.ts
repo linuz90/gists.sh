@@ -27,10 +27,14 @@ const RAW_EXTENSIONS = [
 
 const isDev = process.env.NODE_ENV === "development";
 
-function buildCsp(nonce: string): string {
+function buildCsp(): string {
+  // No per-request nonce — nonces force dynamic rendering (x-nonce header
+  // makes Next.js re-render every request), breaking ISR/CDN caching.
+  // 'unsafe-inline' is sufficient here: the site has no auth/sensitive forms,
+  // and gist content is sanitized by rehype-sanitize + default-src 'self'.
   const scriptSrc = isDev
     ? "'self' 'unsafe-inline' 'unsafe-eval'"
-    : `'self' 'nonce-${nonce}' 'unsafe-inline'`;
+    : "'self' 'unsafe-inline'";
 
   const directives = [
     "default-src 'self'",
@@ -99,14 +103,26 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
-  const csp = buildCsp(nonce);
+  const csp = buildCsp();
 
-  const requestHeaders = new Headers(request.headers);
-  requestHeaders.set("x-nonce", nonce);
-
-  const response = NextResponse.next({ request: { headers: requestHeaders } });
+  const response = NextResponse.next();
   response.headers.set("Content-Security-Policy", csp);
+
+  // Force Vercel CDN to cache gist pages for 24h. Next.js sets
+  // Cache-Control: no-cache for pages with useSearchParams() in a Suspense
+  // boundary, but Vercel-CDN-Cache-Control takes priority at the edge.
+  // The CDN caches the full response; revalidatePath() in the refresh
+  // endpoint purges it on demand.
+  const isGistPage =
+    parts.length === 2 &&
+    /^[a-f0-9]{20}$|^[a-f0-9]{32}$/.test(parts[1]);
+  if (isGistPage) {
+    response.headers.set(
+      "Vercel-CDN-Cache-Control",
+      "public, s-maxage=86400, stale-while-revalidate=86400",
+    );
+  }
+
   return applySecurityHeaders(response);
 }
 

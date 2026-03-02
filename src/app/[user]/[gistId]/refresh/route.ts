@@ -1,5 +1,5 @@
 import { isValidGistId } from "@/lib/github";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 
 // Best-effort rate limit: in-memory, so resets on cold starts (fine for serverless)
@@ -10,7 +10,7 @@ export async function POST(
   _request: NextRequest,
   { params }: { params: Promise<{ user: string; gistId: string }> },
 ) {
-  const { gistId } = await params;
+  const { user, gistId } = await params;
 
   if (!isValidGistId(gistId)) {
     return NextResponse.json({ error: "Invalid gist ID" }, { status: 400 });
@@ -27,9 +27,11 @@ export async function POST(
   }
 
   cooldowns.set(gistId, now);
-  // Route handlers used by external callers (webhooks/agents) should force
-  // immediate expiration so the next request is a blocking revalidate.
+  // Purge the Data Cache (GitHub API responses) immediately
   revalidateTag(`gist-${gistId}`, { expire: 0 });
+  // Purge the page from Vercel's CDN cache (set via Vercel-CDN-Cache-Control
+  // in proxy.ts) so the next request gets a fresh render
+  revalidatePath(`/${user}/${gistId}`);
 
   return NextResponse.json({ revalidated: true });
 }
