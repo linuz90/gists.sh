@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 
 interface FileTabsProps {
@@ -16,7 +16,6 @@ export function FileTabs({
   user,
   gistId,
 }: FileTabsProps) {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const handleTabClick = useCallback(
@@ -28,9 +27,12 @@ export function FileTabs({
         params.set("file", filename);
       }
       const query = params.toString();
-      router.push(`/${user}/${gistId}${query ? `?${query}` : ""}`);
+      // Use pushState for instant client-side switching — no server round-trip
+      // since all files are pre-rendered. Next.js 14.1+ integrates pushState
+      // with useSearchParams() so the UI reacts to the URL change.
+      window.history.pushState(null, "", `/${user}/${gistId}${query ? `?${query}` : ""}`);
     },
-    [router, searchParams, filenames, user, gistId],
+    [searchParams, filenames, user, gistId],
   );
 
   if (filenames.length <= 1) return null;

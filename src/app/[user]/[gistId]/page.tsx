@@ -1,17 +1,13 @@
 import { AuthorFooter } from "@/components/author-footer";
-import { CodeBlockEnhancer } from "@/components/code-block-enhancer";
 import { CodeRenderer } from "@/components/code-renderer";
-import { FileTabs } from "@/components/file-tabs";
-import { HashScroller } from "@/components/hash-scroller";
+import { GistClientShell } from "@/components/gist-client-shell";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
-import { PageCopyButtons } from "@/components/page-copy-buttons";
 import { CsvViewer } from "@/components/renderers/csv-viewer";
 import { IcsViewer } from "@/components/renderers/ics-viewer";
 import { JsonViewer } from "@/components/renderers/json-viewer";
 import { StructuredFileViewer } from "@/components/renderers/structured-file-viewer";
 import { YamlViewer } from "@/components/renderers/yaml-viewer";
-import { SecretBadge } from "@/components/secret-badge";
-import { Text } from "@/components/ui/text";
+import type { GistFile } from "@/lib/github";
 import {
   fetchGist,
   fetchUser,
@@ -26,7 +22,6 @@ import {
 import { getShikiLang, highlightCode } from "@/lib/shiki";
 import matter from "gray-matter";
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { cache, Suspense } from "react";
 
@@ -42,13 +37,6 @@ function ContentLoader() {
 
 interface PageProps {
   params: Promise<{ user: string; gistId: string }>;
-  searchParams: Promise<{
-    file?: string;
-    theme?: string;
-    noheader?: string;
-    nofooter?: string;
-    mono?: string;
-  }>;
 }
 
 const fetchGistCached = cache(async (gistId: string) => fetchGist(gistId));
@@ -113,13 +101,65 @@ export async function generateMetadata({
   };
 }
 
-export default async function GistPage({ params, searchParams }: PageProps) {
+// Pre-render a single file's content (server-side)
+async function renderFileContent(file: GistFile) {
+  const { filename, content, language } = file;
+
+  if (isMarkdown(filename)) {
+    return <MarkdownRenderer content={content} />;
+  }
+
+  if (isStructuredData(filename)) {
+    const rawHtml = await highlightCode(
+      content,
+      getShikiLang(filename, language),
+    );
+
+    if (isJSON(filename)) {
+      return (
+        <StructuredFileViewer rawHtml={rawHtml} rawContent={content}>
+          <JsonViewer content={content} />
+        </StructuredFileViewer>
+      );
+    }
+    if (isYAML(filename)) {
+      return (
+        <StructuredFileViewer rawHtml={rawHtml} rawContent={content}>
+          <YamlViewer content={content} />
+        </StructuredFileViewer>
+      );
+    }
+    if (isCSV(filename)) {
+      return (
+        <StructuredFileViewer rawHtml={rawHtml} rawContent={content}>
+          <CsvViewer content={content} filename={filename} />
+        </StructuredFileViewer>
+      );
+    }
+    if (isICS(filename)) {
+      return (
+        <StructuredFileViewer rawHtml={rawHtml} rawContent={content}>
+          <IcsViewer content={content} />
+        </StructuredFileViewer>
+      );
+    }
+  }
+
+  if (isPlainText(filename)) {
+    return (
+      <div className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <CodeRenderer content={content} filename={filename} language={language} />
+  );
+}
+
+export default async function GistPage({ params }: PageProps) {
   const { user, gistId } = await params;
-  const resolvedSearchParams = await searchParams;
-  const { file: fileParam } = resolvedSearchParams;
-  const hideHeader = resolvedSearchParams.noheader !== undefined;
-  const hideFooter = resolvedSearchParams.nofooter !== undefined;
-  const monoMode = resolvedSearchParams.mono !== undefined;
   const [gist, githubUser] = await Promise.all([
     fetchGistCached(gistId),
     fetchUserCached(user),
@@ -132,136 +172,39 @@ export default async function GistPage({ params, searchParams }: PageProps) {
   const files = Object.values(gist.files);
   const filenames = files.map((f) => f.filename);
 
-  // Select active file
-  const activeFile = fileParam
-    ? (files.find((f) => f.filename === fileParam) ?? files[0])
-    : files[0];
+  // Build serializable file data for the client shell
+  const fileData = files.map((f) => ({
+    filename: f.filename,
+    content: f.content,
+    language: f.language,
+    isMarkdown: isMarkdown(f.filename),
+  }));
 
-  const activeFilename = activeFile.filename;
-  const githubUrl = `https://gist.github.com/${user}/${gistId}`;
-
-  // Pre-render Shiki HTML for structured files (used in raw view toggle)
-  const rawHtml = isStructuredData(activeFilename)
-    ? await highlightCode(
-        activeFile.content,
-        getShikiLang(activeFilename, activeFile.language),
-      )
-    : "";
-
-  const activeContent = isMarkdown(activeFilename) ? (
-    <MarkdownRenderer content={activeFile.content} />
-  ) : isJSON(activeFilename) ? (
-    <StructuredFileViewer rawHtml={rawHtml} rawContent={activeFile.content}>
-      <JsonViewer content={activeFile.content} />
-    </StructuredFileViewer>
-  ) : isYAML(activeFilename) ? (
-    <StructuredFileViewer rawHtml={rawHtml} rawContent={activeFile.content}>
-      <YamlViewer content={activeFile.content} />
-    </StructuredFileViewer>
-  ) : isCSV(activeFilename) ? (
-    <StructuredFileViewer rawHtml={rawHtml} rawContent={activeFile.content}>
-      <CsvViewer content={activeFile.content} filename={activeFilename} />
-    </StructuredFileViewer>
-  ) : isICS(activeFilename) ? (
-    <StructuredFileViewer rawHtml={rawHtml} rawContent={activeFile.content}>
-      <IcsViewer content={activeFile.content} />
-    </StructuredFileViewer>
-  ) : isPlainText(activeFilename) ? (
-    <div className="whitespace-pre-wrap text-sm leading-relaxed text-neutral-800 dark:text-neutral-200">
-      {activeFile.content}
-    </div>
-  ) : (
-    <CodeRenderer
-      content={activeFile.content}
-      filename={activeFilename}
-      language={activeFile.language}
-    />
+  // Pre-render ALL files in parallel so the page doesn't depend on searchParams.
+  // This makes the page ISR-cacheable — searchParams are read client-side only.
+  const renderedPanels = await Promise.all(
+    files.map(async (file) => (
+      <Suspense key={file.filename} fallback={<ContentLoader />}>
+        {await renderFileContent(file)}
+      </Suspense>
+    )),
   );
 
   return (
-    <main className="min-h-screen flex flex-col">
-      <HashScroller />
-      <div
-        className={`max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full flex-1 flex flex-col${monoMode ? " font-mono" : ""}`}
+    <Suspense fallback={<ContentLoader />}>
+      <GistClientShell
+        filenames={filenames}
+        fileData={fileData}
+        gistDescription={gist.description}
+        gistPublic={gist.public}
+        gistHtmlUrl={gist.html_url}
+        gistOwner={!!gist.owner}
+        user={user}
+        gistId={gistId}
+        authorFooter={gist.owner ? <AuthorFooter user={githubUser} /> : null}
       >
-        {/* Header */}
-        {!hideHeader && (
-          <header className="flex items-start justify-between mb-8">
-            <div className="min-w-0">
-              <h1 className="text-sm font-medium text-neutral-700 dark:text-neutral-300 truncate">
-                {gist.description || activeFilename}
-                {!gist.public && <SecretBadge />}
-              </h1>
-              {gist.description && filenames.length === 1 && (
-                <Text variant="meta" className="mt-1 truncate">
-                  {activeFilename}
-                </Text>
-              )}
-            </div>
-
-            <PageCopyButtons
-              content={activeFile.content}
-              filename={activeFilename}
-              originalUrl={gist.html_url}
-              user={user}
-              gistId={gistId}
-              showCopyFormatted={isMarkdown(activeFilename)}
-            />
-          </header>
-        )}
-
-        {/* File tabs (always visible for multi-file gists, even with noheader) */}
-        <Suspense>
-          <FileTabs
-            filenames={filenames}
-            activeFile={activeFilename}
-            user={user}
-            gistId={gistId}
-          />
-        </Suspense>
-
-        {/* Content */}
-        <CodeBlockEnhancer>
-          <div
-            id="gist-content"
-            className={`flex-1 flex flex-col${filenames.length > 1 ? " mt-6 after-tabs" : ""}`}
-          >
-            <p className="sr-only">
-              For the full content of this gist, refer to {githubUrl}
-            </p>
-            <Suspense fallback={<ContentLoader />}>{activeContent}</Suspense>
-          </div>
-        </CodeBlockEnhancer>
-
-        {/* Author */}
-        {!hideFooter && gist.owner && <AuthorFooter user={githubUser} />}
-
-        {/* Footer */}
-        {!hideFooter && (
-          <footer className="mt-8 pt-8 border-t border-neutral-100 dark:border-neutral-900">
-            <Text
-              variant="meta"
-              as="div"
-              className="flex items-center justify-between"
-            >
-              <a
-                href={gist.html_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
-              >
-                View on GitHub
-              </a>
-              <Link
-                href="/"
-                className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
-              >
-                gists.sh
-              </Link>
-            </Text>
-          </footer>
-        )}
-      </div>
-    </main>
+        {renderedPanels}
+      </GistClientShell>
+    </Suspense>
   );
 }
