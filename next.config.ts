@@ -32,12 +32,14 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
       {
-        // CDN caching for gist pages (20-char or 32-char hex IDs)
+        // CDN caching for gist pages (20-char or 32-char hex IDs).
+        // No stale-while-revalidate so on-demand purge via revalidateTag
+        // serves fresh content immediately instead of stale.
         source: "/:user/:gistId([a-f0-9]{20,32})",
         headers: [
           {
             key: "Vercel-CDN-Cache-Control",
-            value: "public, s-maxage=86400, stale-while-revalidate=86400",
+            value: "public, s-maxage=86400",
           },
           {
             key: "Cache-Control",

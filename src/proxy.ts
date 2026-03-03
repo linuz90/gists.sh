@@ -112,8 +112,9 @@ export function proxy(request: NextRequest) {
   // Cache-Control: private, no-cache for pages with useSearchParams() in a
   // Suspense boundary. We override both Cache-Control (to remove "private",
   // which blocks CDN caching) and set Vercel-CDN-Cache-Control as the
-  // authoritative CDN directive. revalidatePath() in the refresh endpoint
-  // purges CDN cache on demand.
+  // authoritative CDN directive.
+  // Vercel-Cache-Tag lets revalidateTag() in the refresh endpoint purge the
+  // CDN edge cache (not just the Data Cache) for the specific gist.
   const isGistPage =
     parts.length === 2 &&
     /^[a-f0-9]{20}$|^[a-f0-9]{32}$/.test(parts[1]);
@@ -124,8 +125,9 @@ export function proxy(request: NextRequest) {
     );
     response.headers.set(
       "Vercel-CDN-Cache-Control",
-      "public, s-maxage=86400, stale-while-revalidate=86400",
+      "public, s-maxage=86400",
     );
+    response.headers.set("Vercel-Cache-Tag", `gist-${parts[1]}`);
   }
 
   return applySecurityHeaders(response);
