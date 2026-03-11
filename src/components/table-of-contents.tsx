@@ -65,7 +65,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
   }, []);
 
   return (
-    <div className="sticky bottom-[calc(1.5rem+env(safe-area-inset-bottom))] z-40 -mt-10 flex justify-end pointer-events-none">
+    <div className="pointer-events-none z-40 flex justify-end sticky bottom-[calc(1rem+env(safe-area-inset-bottom))] mt-4 min-[817px]:fixed min-[817px]:right-[max(1.5rem,env(safe-area-inset-right))] min-[817px]:bottom-[calc(1rem+env(safe-area-inset-bottom))] min-[817px]:mt-0">
       <div className="pointer-events-auto relative">
         {open && (
           <>
@@ -73,7 +73,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
               className="fixed inset-0 z-40"
               onClick={() => setOpen(false)}
             />
-            <div className="absolute bottom-14 right-0 z-50 w-64 rounded-xl overflow-hidden bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-1 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_1px_4px_-1px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.4),0_1px_4px_-1px_rgba(0,0,0,0.2)] animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-2 duration-150">
+            <div className="absolute bottom-14 right-0 z-50 w-64 rounded-xl overflow-hidden bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-1 shadow-overlay dark:shadow-overlay-dark animate-in fade-in-0 zoom-in-95 slide-in-from-bottom-2 duration-150">
               <div className="px-2.5 py-1.5 text-[0.65rem] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-500">
                 On this page
               </div>
@@ -116,7 +116,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
 
         <button
           onClick={() => setOpen(!open)}
-          className="relative z-50 flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-[0_4px_24px_-4px_rgba(0,0,0,0.08),0_1px_4px_-1px_rgba(0,0,0,0.04)] dark:shadow-[0_4px_24px_-4px_rgba(0,0,0,0.4),0_1px_4px_-1px_rgba(0,0,0,0.2)] text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors outline-none"
+          className="relative z-50 flex items-center justify-center w-10 h-10 rounded-full bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 shadow-overlay dark:shadow-overlay-dark text-neutral-500 dark:text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors outline-none focus-visible:!outline-none focus-visible:!rounded-full focus-visible:!shadow-focus"
           aria-label={open ? "Close table of contents" : "Table of contents"}
         >
           {open ? <X size={18} /> : <List size={18} />}

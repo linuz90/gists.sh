@@ -40,7 +40,7 @@ export function SegmentedControl<T extends string>({
             {isActive && (
               <motion.div
                 layoutId={id ?? "segmented-control-indicator"}
-                className="absolute inset-0 rounded-md bg-white dark:bg-neutral-800 ring-1 ring-neutral-200 dark:ring-neutral-700 shadow-sm"
+                className="absolute inset-0 rounded-md bg-white dark:bg-neutral-800 ring-1 ring-neutral-200 dark:ring-neutral-700 shadow-control"
                 transition={{ type: "spring", bounce: 0.1, duration: 0.3 }}
               />
             )}

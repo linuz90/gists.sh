@@ -46,6 +46,15 @@ summary {
   --font-mono:
     var(--font-geist-mono), ui-monospace, SFMono-Regular, "SF Mono", Menlo,
     Consolas, "Liberation Mono", monospace;
+  --shadow-control: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-overlay:
+    0 4px 24px -4px rgba(0, 0, 0, 0.08),
+    0 1px 4px -1px rgba(0, 0, 0, 0.04);
+  --shadow-overlay-dark:
+    0 4px 24px -4px rgba(0, 0, 0, 0.4),
+    0 1px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-showcase: 0 0 40px rgba(0, 0, 0, 0.1);
+  --shadow-focus: 0 0 0 2px color-mix(in srgb, currentColor 25%, transparent);
 
   /* Intermediate neutral steps (midpoints between Tailwind's defaults) */
   --color-neutral-150: oklch(94.6% 0 0);

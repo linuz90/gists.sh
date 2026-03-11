@@ -15,7 +15,7 @@ const Content = forwardRef<
     <DropdownMenuPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}
-      className={`z-50 min-w-[160px] rounded-xl! bg-neutral-900 dark:bg-neutral-200 p-1 shadow-lg data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 ${className ?? ""}`}
+      className={`z-50 min-w-[160px] rounded-xl! bg-neutral-900 dark:bg-neutral-200 p-1 shadow-overlay dark:shadow-overlay-dark data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=top]:slide-in-from-bottom-2 ${className ?? ""}`}
       {...props}
     />
   </Portal>

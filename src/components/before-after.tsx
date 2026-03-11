@@ -74,7 +74,7 @@ export function BeforeAfter() {
 
       {/* Preview panel */}
       <div className="-m-10 p-10 mb-0 pb-0 mask-b-from-70% mask-b-to-100%">
-        <div className="relative h-70 shadow-[0_0_40px_rgba(0,0,0,0.1)] rounded-lg">
+        <div className="relative h-70 rounded-lg shadow-showcase">
           <div
             className={`absolute inset-0 transition-opacity duration-300 ${
               view === "github"
