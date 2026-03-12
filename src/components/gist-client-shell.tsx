@@ -134,12 +134,26 @@ export function GistClientShell({
               >
                 View on GitHub
               </a>
-              <Link
-                href="/"
-                className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
-              >
-                gists.sh
-              </Link>
+              <span className="flex items-center gap-3">
+                <Link
+                  href="/privacy"
+                  className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                >
+                  Privacy
+                </Link>
+                <Link
+                  href="/terms"
+                  className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                >
+                  Terms
+                </Link>
+                <Link
+                  href="/"
+                  className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+                >
+                  gists.sh
+                </Link>
+              </span>
             </Text>
           </footer>
         )}

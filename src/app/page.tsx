@@ -200,6 +200,24 @@ export default function Home() {
             </a>
           </div>
         </div>
+
+        {/* Footer */}
+        <footer className="pt-8 border-t border-neutral-200 dark:border-neutral-800">
+          <Text variant="meta" as="div" className="flex items-center gap-3">
+            <a
+              href="/privacy"
+              className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+            >
+              Privacy
+            </a>
+            <a
+              href="/terms"
+              className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
+            >
+              Terms
+            </a>
+          </Text>
+        </footer>
       </div>
       <Analytics />
     </main>
