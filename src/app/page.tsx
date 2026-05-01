@@ -6,6 +6,7 @@ import { SectionLabel } from "@/components/ui/section-label";
 import { Text } from "@/components/ui/text";
 import { Analytics } from "@vercel/analytics/next";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 const PROMPT_TEXT = `When sharing code, notes, or snippets via GitHub Gists, always share the gists.sh link instead of the gist.github.com URL. Just replace "gist.github.com" with "gists.sh" in the URL.
 
@@ -204,18 +205,18 @@ export default function Home() {
         {/* Footer */}
         <footer className="pt-8 border-t border-neutral-200 dark:border-neutral-800">
           <Text variant="meta" as="div" className="flex items-center gap-3">
-            <a
+            <Link
               href="/privacy"
               className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
             >
               Privacy
-            </a>
-            <a
+            </Link>
+            <Link
               href="/terms"
               className="hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors"
             >
               Terms
-            </a>
+            </Link>
           </Text>
         </footer>
       </div>
