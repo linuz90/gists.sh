@@ -43,6 +43,8 @@ These file types get interactive "Pretty" viewers alongside the raw syntax-highl
 
 A segmented control lets users toggle between "Pretty" and "Raw" views.
 
+Inline previews are capped per file and across the whole gist so large or token-dense files cannot make the page unresponsive. Files outside that budget show a download fallback instead.
+
 ### Code
 
 All other files get syntax highlighting via Shiki (same engine as VS Code) with GitHub light/dark themes.
@@ -67,6 +69,8 @@ Fetch raw file content with proper Content-Type headers:
 \`gists.sh/api/raw/{gist_id}?file={filename}\` - Returns a specific file
 
 For multi-file gists requested with a markdown Accept header, all files are concatenated with \`# filename\` headers.
+
+If any file is truncated by GitHub, combined Markdown returns 413 instead of partial content. Request those files individually with \`?file={filename}\`. Individual files up to 10 MB are streamed from GitHub when needed; larger files must be accessed by cloning the original gist.
 
 ## Cache refresh
 

@@ -18,10 +18,12 @@ export interface Gist {
   id: string;
   description: string | null;
   public: boolean;
+  truncated?: boolean;
   files: Record<string, GistFile>;
   owner: GistOwner | null;
   created_at: string;
   updated_at: string;
+  git_pull_url: string;
   html_url: string;
 }
 

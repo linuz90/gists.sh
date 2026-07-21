@@ -19,7 +19,7 @@ Every file type gets the best possible rendering:
 - **CSV / TSV** - sortable, searchable data table
 - **ICS / iCal** - calendar event cards with dates, locations, and recurrence
 
-Multi-file gists get tabs. Toggle between "Pretty" and "Raw" views on structured files. Everything looks clean.
+Multi-file gists get tabs. Toggle between "Pretty" and "Raw" views on structured files. Files are previewed within conservative per-file and per-gist limits so very large or token-dense gists stay responsive.
 
 ### URL parameters
 
@@ -45,6 +45,8 @@ gists.sh/api/raw/{gist_id}
 gists.sh/api/raw/{gist_id}?file={filename}
 ```
 
+Files larger than GitHub's 1 MB inline API limit are streamed from their raw URL when possible. Files over 10 MB must be accessed by cloning the original gist. Combined multi-file Markdown requests return `413` instead of silently returning partial content when any file is truncated.
+
 ## Agent skill
 
 Teach your coding agent to use gists.sh links whenever it creates or shares gists. Works with Claude Code, Codex, Cursor, and any agent that supports [skills](https://skills.sh).
@@ -62,9 +64,10 @@ pnpm dev
 ```
 
 A [GitHub personal access token](https://github.com/settings/tokens) with the `gist` scope raises your API rate limit from 60 to 5,000 requests/hour. Note: the `gist` scope grants read access to all gists on the account, including secret ones. If that's a concern, use a token from a dedicated account with no sensitive gists.
+
 ## Stack
 
-Next.js 15, Tailwind CSS v4, react-markdown, Shiki, deployed on Vercel.
+Next.js 16, Tailwind CSS v4, react-markdown, Shiki, deployed on Vercel.
 
 ## Author
 

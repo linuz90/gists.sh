@@ -13,8 +13,8 @@ import { Children, type ReactNode } from "react";
 interface FileData {
   filename: string;
   content: string | null;
-  rawContentUrl: string;
-  downloadUrl: string;
+  rawContentUrl: string | null;
+  downloadUrl: string | null;
   language: string | null;
   isMarkdown: boolean;
 }

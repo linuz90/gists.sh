@@ -8,8 +8,12 @@ import { IcsViewer } from "@/components/renderers/ics-viewer";
 import { JsonViewer } from "@/components/renderers/json-viewer";
 import { StructuredFileViewer } from "@/components/renderers/structured-file-viewer";
 import { YamlViewer } from "@/components/renderers/yaml-viewer";
+import {
+  canFetchFullRawFile,
+  type FilePreviewStatus,
+  getFilePreviewStatuses,
+} from "@/lib/file-preview";
 import type { GistFile } from "@/lib/github";
-import { MAX_INLINE_PREVIEW_BYTES } from "@/lib/constants";
 import {
   fetchGist,
   fetchUser,
@@ -103,11 +107,6 @@ export async function generateMetadata({
   };
 }
 
-// Pre-render a single file's content (server-side)
-function canPreviewFile(file: GistFile): boolean {
-  return !file.truncated && file.size <= MAX_INLINE_PREVIEW_BYTES;
-}
-
 function getRawFileUrl(
   gistId: string,
   filename: string,
@@ -122,17 +121,19 @@ function getRawFileUrl(
 
 async function renderFileContent(
   file: GistFile,
-  gistId: string,
-  gistUpdatedAt: string,
+  previewStatus: FilePreviewStatus,
+  downloadUrl: string | null,
+  githubUrl: string,
 ) {
   const { filename, content, language } = file;
 
-  if (!canPreviewFile(file)) {
+  if (previewStatus !== "available") {
     return (
       <LargeFileNotice
-        downloadUrl={getRawFileUrl(gistId, filename, gistUpdatedAt, true)}
+        downloadUrl={downloadUrl}
         fileSize={file.size}
-        previewLimit={MAX_INLINE_PREVIEW_BYTES}
+        githubUrl={githubUrl}
+        status={previewStatus}
       />
     );
   }
@@ -203,17 +204,23 @@ export default async function GistPage({ params }: PageProps) {
 
   const files = Object.values(gist.files);
   const filenames = files.map((f) => f.filename);
+  const previewStatuses = getFilePreviewStatuses(files);
 
   // Build serializable file data for the client shell
   const fileData = files.map((file) => {
-    const canPreview = canPreviewFile(file);
+    const canPreview = previewStatuses.get(file.filename) === "available";
+    const canFetchRaw = canFetchFullRawFile(file);
 
     return {
       filename: file.filename,
-      // Large content stays on the server until the user explicitly copies it.
+      // Non-previewed content stays on the server until explicitly requested.
       content: canPreview ? file.content : null,
-      rawContentUrl: getRawFileUrl(gistId, file.filename, gist.updated_at),
-      downloadUrl: getRawFileUrl(gistId, file.filename, gist.updated_at, true),
+      rawContentUrl: canFetchRaw
+        ? getRawFileUrl(gistId, file.filename, gist.updated_at)
+        : null,
+      downloadUrl: canFetchRaw
+        ? getRawFileUrl(gistId, file.filename, gist.updated_at, true)
+        : null,
       language: file.language,
       isMarkdown: canPreview && isMarkdown(file.filename),
     };
@@ -222,11 +229,24 @@ export default async function GistPage({ params }: PageProps) {
   // Pre-render ALL files in parallel so the page doesn't depend on searchParams.
   // This makes the page ISR-cacheable — searchParams are read client-side only.
   const renderedPanels = await Promise.all(
-    files.map(async (file) => (
-      <Suspense key={file.filename} fallback={<ContentLoader />}>
-        {await renderFileContent(file, gistId, gist.updated_at)}
-      </Suspense>
-    )),
+    files.map(async (file) => {
+      const previewStatus =
+        previewStatuses.get(file.filename) ?? "file-too-large";
+      const downloadUrl = canFetchFullRawFile(file)
+        ? getRawFileUrl(gistId, file.filename, gist.updated_at, true)
+        : null;
+
+      return (
+        <Suspense key={file.filename} fallback={<ContentLoader />}>
+          {await renderFileContent(
+            file,
+            previewStatus,
+            downloadUrl,
+            gist.html_url,
+          )}
+        </Suspense>
+      );
+    }),
   );
 
   return (
