@@ -1,0 +1,20 @@
+version = 1
+name = "gists.sh"
+
+[setup]
+script = "./workspace-setup.sh init"
+
+[[actions]]
+name = "Run"
+icon = "run"
+command = "pnpm dev"
+
+[[actions]]
+name = "Lint"
+icon = "test"
+command = "pnpm lint"
+
+[[actions]]
+name = "Build"
+icon = "test"
+command = "pnpm build"

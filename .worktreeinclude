@@ -1,0 +1,2 @@
+# Copy the optional local GitHub API credential into managed worktrees.
+/.env.local

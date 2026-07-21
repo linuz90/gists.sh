@@ -16,10 +16,12 @@ A minimal, beautiful viewer for GitHub Gists. Replace `gist.github.com` with `gi
 
 ```bash
 pnpm install
-pnpm dev        # starts dev server on :3000
+pnpm dev        # starts on :3000 or the next available port
 pnpm build      # production build (always run before pushing)
 pnpm lint       # check for lint errors
 ```
+
+Managed worktrees use `.worktreeinclude`; after a plain `git worktree add`, run `./workspace-setup.sh init` in the new checkout.
 
 ## Environment Variables
 
