@@ -12,7 +12,9 @@ import { Children, type ReactNode } from "react";
 
 interface FileData {
   filename: string;
-  content: string;
+  content: string | null;
+  rawContentUrl: string;
+  downloadUrl: string;
   language: string | null;
   isMarkdown: boolean;
 }
@@ -78,6 +80,8 @@ export function GistClientShell({
 
             <PageCopyButtons
               content={activeData.content}
+              rawContentUrl={activeData.rawContentUrl}
+              downloadUrl={activeData.downloadUrl}
               filename={activeFilename}
               originalUrl={gistHtmlUrl}
               user={user}

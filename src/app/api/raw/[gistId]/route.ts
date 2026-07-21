@@ -1,6 +1,29 @@
 import { fetchGist, getMimeType, isValidGistId } from "@/lib/github";
 import { NextRequest, NextResponse } from "next/server";
 
+function encodeContentDispositionFilename(filename: string): string {
+  return encodeURIComponent(filename).replace(
+    /['()*]/g,
+    (character) => `%${character.charCodeAt(0).toString(16).toUpperCase()}`,
+  );
+}
+
+function getRawResponseHeaders(
+  contentType: string,
+  filename: string,
+  download: boolean,
+): HeadersInit {
+  return {
+    "Content-Type": `${contentType}; charset=utf-8`,
+    "Content-Security-Policy": "default-src 'none'",
+    "X-Content-Type-Options": "nosniff",
+    "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=86400",
+    ...(download && {
+      "Content-Disposition": `attachment; filename*=UTF-8''${encodeContentDispositionFilename(filename)}`,
+    }),
+  };
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ gistId: string }> },
@@ -52,14 +75,32 @@ export async function GET(
     }
 
     const contentType = getMimeType(targetFile.filename);
+    const download = request.nextUrl.searchParams.has("download");
+    const headers = getRawResponseHeaders(
+      contentType,
+      targetFile.filename,
+      download,
+    );
+
+    // GitHub omits the remainder of large files from the gist API response.
+    // Stream its revision-specific raw URL so copy and download actions receive
+    // the complete file without adding it to the page's server/client payload.
+    if (targetFile.truncated) {
+      const rawResponse = await fetch(targetFile.raw_url, {
+        // Large responses exceed Next.js's 2 MB data-cache limit. The route's
+        // Cache-Control header still lets the CDN cache the streamed response.
+        cache: "no-store",
+      });
+
+      if (!rawResponse.ok || !rawResponse.body) {
+        throw new Error(`GitHub raw content error: ${rawResponse.status}`);
+      }
+
+      return new NextResponse(rawResponse.body, { headers });
+    }
 
     return new NextResponse(targetFile.content, {
-      headers: {
-        "Content-Type": `${contentType}; charset=utf-8`,
-        "Content-Security-Policy": "default-src 'none'",
-        "X-Content-Type-Options": "nosniff",
-        "Cache-Control": "public, s-maxage=86400, stale-while-revalidate=86400",
-      },
+      headers,
     });
   } catch (error) {
     const message = error instanceof Error ? error.message : "";

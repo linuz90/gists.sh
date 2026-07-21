@@ -1,6 +1,7 @@
 import { AuthorFooter } from "@/components/author-footer";
 import { CodeRenderer } from "@/components/code-renderer";
 import { GistClientShell } from "@/components/gist-client-shell";
+import { LargeFileNotice } from "@/components/large-file-notice";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import { CsvViewer } from "@/components/renderers/csv-viewer";
 import { IcsViewer } from "@/components/renderers/ics-viewer";
@@ -8,6 +9,7 @@ import { JsonViewer } from "@/components/renderers/json-viewer";
 import { StructuredFileViewer } from "@/components/renderers/structured-file-viewer";
 import { YamlViewer } from "@/components/renderers/yaml-viewer";
 import type { GistFile } from "@/lib/github";
+import { MAX_INLINE_PREVIEW_BYTES } from "@/lib/constants";
 import {
   fetchGist,
   fetchUser,
@@ -102,8 +104,38 @@ export async function generateMetadata({
 }
 
 // Pre-render a single file's content (server-side)
-async function renderFileContent(file: GistFile) {
+function canPreviewFile(file: GistFile): boolean {
+  return !file.truncated && file.size <= MAX_INLINE_PREVIEW_BYTES;
+}
+
+function getRawFileUrl(
+  gistId: string,
+  filename: string,
+  gistUpdatedAt: string,
+  download = false,
+): string {
+  // The version keeps CDN-cached raw responses in sync after a gist refresh.
+  const params = new URLSearchParams({ file: filename, v: gistUpdatedAt });
+  if (download) params.set("download", "1");
+  return `/api/raw/${gistId}?${params.toString()}`;
+}
+
+async function renderFileContent(
+  file: GistFile,
+  gistId: string,
+  gistUpdatedAt: string,
+) {
   const { filename, content, language } = file;
+
+  if (!canPreviewFile(file)) {
+    return (
+      <LargeFileNotice
+        downloadUrl={getRawFileUrl(gistId, filename, gistUpdatedAt, true)}
+        fileSize={file.size}
+        previewLimit={MAX_INLINE_PREVIEW_BYTES}
+      />
+    );
+  }
 
   if (isMarkdown(filename)) {
     return <MarkdownRenderer content={content} />;
@@ -173,19 +205,26 @@ export default async function GistPage({ params }: PageProps) {
   const filenames = files.map((f) => f.filename);
 
   // Build serializable file data for the client shell
-  const fileData = files.map((f) => ({
-    filename: f.filename,
-    content: f.content,
-    language: f.language,
-    isMarkdown: isMarkdown(f.filename),
-  }));
+  const fileData = files.map((file) => {
+    const canPreview = canPreviewFile(file);
+
+    return {
+      filename: file.filename,
+      // Large content stays on the server until the user explicitly copies it.
+      content: canPreview ? file.content : null,
+      rawContentUrl: getRawFileUrl(gistId, file.filename, gist.updated_at),
+      downloadUrl: getRawFileUrl(gistId, file.filename, gist.updated_at, true),
+      language: file.language,
+      isMarkdown: canPreview && isMarkdown(file.filename),
+    };
+  });
 
   // Pre-render ALL files in parallel so the page doesn't depend on searchParams.
   // This makes the page ISR-cacheable — searchParams are read client-side only.
   const renderedPanels = await Promise.all(
     files.map(async (file) => (
       <Suspense key={file.filename} fallback={<ContentLoader />}>
-        {await renderFileContent(file)}
+        {await renderFileContent(file, gistId, gist.updated_at)}
       </Suspense>
     )),
   );

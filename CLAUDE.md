@@ -6,7 +6,7 @@ A minimal, beautiful viewer for GitHub Gists. Replace `gist.github.com` with `gi
 
 ## Tech Stack
 
-- Next.js 15 (App Router, TypeScript)
+- Next.js 16 (App Router, TypeScript)
 - Tailwind CSS v4
 - react-markdown + remark-gfm + rehype for markdown rendering
 - Shiki for syntax highlighting
@@ -24,6 +24,7 @@ pnpm lint       # check for lint errors
 ## Environment Variables
 
 Copy `.env.local.example` to `.env.local` and fill in:
+
 - `GITHUB_TOKEN` — GitHub PAT for API access (higher rate limits)
 
 ## Project Structure
@@ -50,5 +51,5 @@ Copy `.env.local.example` to `.env.local` and fill in:
 
 - We use react-markdown (not Tiptap) for rendering since this is read-only
 - Shiki for syntax highlighting (not Prism) — better theme support, same engine as VS Code
-- GitHub API responses are cached aggressively (ISR, 1hr revalidation) since gists rarely change
+- GitHub API responses are cached aggressively (ISR, 24hr revalidation) since gists rarely change
 - Raw content served via API route with proper Content-Type headers

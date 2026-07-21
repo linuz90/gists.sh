@@ -16,7 +16,9 @@ import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 
 interface PageCopyButtonsProps {
-  content: string;
+  content: string | null;
+  rawContentUrl: string;
+  downloadUrl: string;
   filename: string;
   originalUrl: string;
   user: string;
@@ -26,6 +28,8 @@ interface PageCopyButtonsProps {
 
 export function PageCopyButtons({
   content,
+  rawContentUrl,
+  downloadUrl,
   filename,
   originalUrl,
   user,
@@ -36,9 +40,23 @@ export function PageCopyButtons({
   const router = useRouter();
   const refreshingRef = useRef(false);
 
-  const handleCopyRaw = useCallback(() => {
-    copy(content, "Raw content copied");
-  }, [copy, content]);
+  const loadRawContent = useCallback(async () => {
+    if (content !== null) return content;
+
+    const response = await fetch(rawContentUrl);
+    if (!response.ok) throw new Error("Failed to load raw content");
+    return response.text();
+  }, [content, rawContentUrl]);
+
+  const handleCopyRaw = useCallback(async () => {
+    try {
+      if (content === null)
+        toast.loading("Loading raw content...", { id: "copy" });
+      await copy(await loadRawContent(), "Raw content copied");
+    } catch {
+      toast.error("Failed to copy raw content", { id: "copy" });
+    }
+  }, [content, copy, loadRawContent]);
 
   const handleCopyFormatted = useCallback(() => {
     const el = document.getElementById("gist-content");
@@ -58,7 +76,7 @@ export function PageCopyButtons({
       }
     });
 
-    copyFormatted(clone.innerHTML, content);
+    copyFormatted(clone.innerHTML, content ?? "");
   }, [copyFormatted, content]);
 
   const handleCopyLink = useCallback(() => {
@@ -70,17 +88,28 @@ export function PageCopyButtons({
   }, [copy, originalUrl]);
 
   const handleDownload = useCallback(() => {
-    const blob = new Blob([content], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
+    if (content !== null) {
+      const blob = new Blob([content], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast("File downloaded");
+      return;
+    }
+
     const a = document.createElement("a");
-    a.href = url;
+    a.href = downloadUrl;
     a.download = filename;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
     toast("File downloaded");
-  }, [content, filename]);
+  }, [content, downloadUrl, filename]);
 
   const handleOpenOriginal = useCallback(() => {
     window.open(originalUrl, "_blank", "noopener,noreferrer");
