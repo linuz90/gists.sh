@@ -55,3 +55,4 @@ Copy `.env.local.example` to `.env.local` and fill in:
 - Shiki for syntax highlighting (not Prism) — better theme support, same engine as VS Code
 - GitHub API responses are cached aggressively (ISR, 24hr revalidation) since gists rarely change
 - Raw content served via API route with proper Content-Type headers
+- Mermaid diagrams render client-side (Mermaid needs a DOM) and the library is lazy-loaded only on pages with a diagram; see `src/components/mermaid-renderer.tsx`

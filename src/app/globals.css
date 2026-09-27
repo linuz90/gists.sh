@@ -472,6 +472,91 @@ pre code {
   font-size: inherit;
 }
 
+/* ── Mermaid diagrams (see mermaid-renderer.tsx) ────────────────── */
+
+/* Unrendered state doubles as the fallback: the source as a code block */
+.markdown-body .mermaid-diagram {
+  margin: 1.5em 0;
+  padding: 1.25rem;
+  border-radius: 0.5rem;
+  background: var(--color-neutral-50);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  line-height: 1.7;
+  white-space: pre;
+  overflow-x: auto;
+}
+
+.dark .markdown-body .mermaid-diagram {
+  background: var(--color-neutral-900);
+}
+
+.markdown-body .mermaid-diagram[data-rendered] {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  white-space: normal;
+  background: transparent;
+  border: 1px solid var(--color-neutral-200);
+  cursor: zoom-in;
+  /* Wide diagrams break out of the text column, centered on it, up to the
+     viewport edges. --diagram-width is the SVG's natural width, set by
+     mermaid-renderer.tsx; the extra accounts for padding and border. */
+  width: clamp(
+    100%,
+    calc(var(--diagram-width, 0px) + 2.5rem + 2px),
+    min(100vw - 4rem, 96rem)
+  );
+  left: 50%;
+  translate: -50% 0;
+}
+
+.dark .markdown-body .mermaid-diagram[data-rendered] {
+  background: transparent;
+  border-color: var(--color-neutral-800);
+}
+
+.markdown-body .mermaid-diagram svg {
+  height: auto;
+}
+
+.mermaid-expand-btn {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  color: var(--color-neutral-400);
+  cursor: pointer;
+  opacity: 0.7;
+  transition:
+    opacity 0.15s ease,
+    color 0.15s ease;
+}
+
+@media (hover: hover) {
+  .mermaid-expand-btn {
+    opacity: 0;
+  }
+
+  .mermaid-diagram:hover > .mermaid-expand-btn,
+  .mermaid-expand-btn:focus-visible {
+    opacity: 1;
+  }
+}
+
+.mermaid-expand-btn:hover {
+  color: var(--color-neutral-600);
+}
+
+.dark .mermaid-expand-btn {
+  color: var(--color-neutral-500);
+}
+
+.dark .mermaid-expand-btn:hover {
+  color: var(--color-neutral-400);
+}
+
 /* ── Tooltips ──────────────────────────────────────────────────── */
 
 /* Radix tooltip fade animations */

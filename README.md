@@ -12,7 +12,7 @@ gist.github.com/user/abc123  →  gists.sh/user/abc123
 
 Every file type gets the best possible rendering:
 
-- **Markdown** - proper typography, GFM alerts, frontmatter tables, auto table of contents, heading anchors
+- **Markdown** - proper typography, GFM alerts, frontmatter tables, auto table of contents, heading anchors, Mermaid diagrams with a full-screen pan and zoom view
 - **Code** - syntax highlighting via Shiki (same engine as VS Code), with copy buttons on every block
 - **JSON / GeoJSON** - collapsible tree viewer
 - **YAML** - parsed and displayed as a navigable tree

@@ -1,10 +1,12 @@
 import { HeadingAnchorHandler } from "@/components/heading-anchor-handler";
+import { MermaidRenderer } from "@/components/mermaid-renderer";
 import {
   FrontmatterValue,
   isArrayOfObjects,
   isPlainObject,
 } from "@/components/renderers/structured-data-primitives";
 import { rehypeExtractToc } from "@/lib/rehype-extract-toc";
+import { rehypeMermaidBlocks } from "@/lib/rehype-mermaid-blocks";
 import { rehypeWrapTables } from "@/lib/rehype-wrap-tables";
 import type { TocEntry } from "@/lib/toc";
 import rehypeShiki from "@shikijs/rehype";
@@ -143,6 +145,7 @@ export async function MarkdownRenderer({ content }: MarkdownRendererProps) {
     .use(rehypeSanitize, sanitizeSchema)
     .use(rehypeWrapTables)
     .use(rehypeExtractToc(headings))
+    .use(rehypeMermaidBlocks)
     .use(rehypeShiki, {
       themes: {
         light: "github-light",
@@ -156,6 +159,7 @@ export async function MarkdownRenderer({ content }: MarkdownRendererProps) {
   return (
     <>
       <HeadingAnchorHandler />
+      <MermaidRenderer />
       {hasFrontmatter && <FrontmatterDisplay data={frontmatter} />}
       <div
         className="markdown-body max-w-none"
